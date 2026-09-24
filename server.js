@@ -9,8 +9,8 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Bayanan shiga na Admin
-const ADMIN_USER = "admin";
-const ADMIN_PASSWORD = "admin123";
+const ADMIN_USER = "Mrouyac";
+const ADMIN_PASSWORD = "976994mrou";
 
 app.use(cors());
 app.use(express.json());
