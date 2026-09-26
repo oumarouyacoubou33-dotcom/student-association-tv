@@ -19,16 +19,15 @@ if (!fs.existsSync('./uploads')) fs.mkdirSync('./uploads');
 if (!fs.existsSync('./public')) fs.mkdirSync('./public');
 
 const pool = new Pool({
-    connectionString: 'postgresql://postgres:976994Roukki@db.hoevhqthuombztskejkh.supabase.co:5432/postgres',
+    connectionString: 'postgresql://postgres.hoevhqthuombztskejkh:976994Roukki@aws-0-eu-north-1.pooler.supabase.com:6543/postgres',
     ssl: {
         rejectUnauthorized: false
     }
 });
 
-// Tabbatar da tables suna nan
 pool.connect()
     .then(client => {
-        console.log('An haɗa da Supabase PostgreSQL Database.');
+        console.log('An haɗa da Supabase PostgreSQL Database ta Pooler!');
         return client.query(`
             CREATE TABLE IF NOT EXISTS news (
                 id SERIAL PRIMARY KEY,
