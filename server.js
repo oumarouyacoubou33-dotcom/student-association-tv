@@ -25,6 +25,7 @@ const pool = new Pool({
     }
 });
 
+// Tabbatar da tables suna nan
 pool.connect()
     .then(client => {
         console.log('An haɗa da Supabase PostgreSQL Database.');
@@ -74,24 +75,26 @@ app.get('/api/news', async (req, res) => {
         const result = await pool.query('SELECT * FROM news ORDER BY id DESC');
         res.json({ success: true, data: result.rows });
     } catch (err) {
+        console.error("Kuskure wajen ciro labarai:", err);
         res.status(500).json({ success: false, message: err.message });
     }
 });
 
 app.post('/api/news', upload.single('image'), async (req, res) => {
-    const { title, category, content } = req.body;
-    const image = req.file ? req.file.filename : null;
-    const date_published = new Date().toLocaleDateString('ha-NG', { year: 'numeric', month: 'short', day: 'numeric' });
-
-    if (!title || !content) {
-        return res.status(400).json({ success: false, message: 'Shigar da title da content!' });
-    }
-
     try {
+        const { title, category, content } = req.body;
+        const image = req.file ? req.file.filename : null;
+        const date_published = new Date().toLocaleDateString('ha-NG', { year: 'numeric', month: 'short', day: 'numeric' });
+
+        if (!title || !content) {
+            return res.status(400).json({ success: false, message: 'Shigar da title da content!' });
+        }
+
         const sql = `INSERT INTO news (title, category, content, image, date_published) VALUES ($1, $2, $3, $4, $5)`;
         await pool.query(sql, [title, category || 'General', content, image, date_published]);
         res.json({ success: true, message: 'An adana labarin!' });
     } catch (err) {
+        console.error("Kuskure wajen wallafa labari:", err);
         res.status(500).json({ success: false, message: err.message });
     }
 });
@@ -107,6 +110,7 @@ app.delete('/api/news/:id', async (req, res) => {
         await pool.query('DELETE FROM news WHERE id = $1', [id]);
         res.json({ success: true, message: 'An share labarin!' });
     } catch (err) {
+        console.error("Kuskure wajen share labari:", err);
         res.status(500).json({ success: false, message: err.message });
     }
 });
