@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <tittle>Dalibai Vision TV | DVT</tittle>
+  <title>Dalibai Vision TV | DVT</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
     :root { --red: #e50914; --red-dark: #b80710; --dark: #090909; --dark2: #151515; --white: #fff; --muted: #999; }
@@ -18,7 +18,7 @@
     .nav-links { display: flex; list-style: none; gap: 18px; align-items: center; }
     .nav-links a { font-size: 13px; color: #ddd; transition: .3s; }
     .nav-links a:hover { color: var(--red); }
-    
+
     .hero { min-height: 480px; display: flex; align-items: center; padding: 60px 5%; background: linear-gradient(90deg, #050505 15%, rgba(5, 5, 5, .85) 45%, rgba(5, 5, 5, .3)), radial-gradient(circle at 80% 30%, #8b0000, #111 45%, #050505 75%); }
     .hero-content { max-width: 700px; }
     .live-badge { display: inline-flex; align-items: center; gap: 8px; background: var(--red); padding: 6px 12px; border-radius: 5px; font-size: 12px; font-weight: bold; margin-bottom: 15px; }
@@ -27,12 +27,12 @@
     .hero h1 { font-size: clamp(30px, 5vw, 55px); line-height: 1.1; margin-bottom: 15px; }
     .hero h1 span { color: var(--red); }
     .hero p { color: #ccc; font-size: 16px; margin-bottom: 25px; }
-    
+
     .section { padding: 50px 5%; }
     .section-title { margin-bottom: 25px; display: flex; justify-content: space-between; align-items: flex-end; }
     .section-title h2 { font-size: 26px; }
     .section-title h2 span { color: var(--red); }
-    
+
     /* Categories Tabs */
     .filter-tabs { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 5px; margin-bottom: 25px; }
     .tab-btn { background: #181818; color: #ccc; border: 1px solid #333; padding: 8px 16px; border-radius: 20px; font-size: 13px; cursor: pointer; white-space: nowrap; transition: .3s; }
@@ -54,7 +54,6 @@
     .video-container iframe { width: 100%; height: 100%; border: none; }
     .playlist-box { background: var(--dark2); border-radius: 10px; border: 1px solid #282828; padding: 20px; max-height: 450px; overflow-y: auto; }
     .playlist-item { display: flex; gap: 12px; margin-bottom: 15px; cursor: pointer; padding-bottom: 10px; border-bottom: 1px solid #222; }
-    .playlist-item:hover opacity { opacity: 0.8; }
     .playlist-thumb { width: 90px; height: 55px; background: #333; border-radius: 4px; display: flex; justify-content: center; align-items: center; font-size: 20px; flex-shrink: 0; }
     .playlist-info h4 { font-size: 13px; margin-bottom: 4px; }
     .playlist-info span { font-size: 11px; color: #888; }
@@ -90,7 +89,6 @@
       <select id="langSelect" onchange="changeLanguage(this.value)">
         <option value="ha">Hausa</option>
         <option value="fr">Français</option>
-        <option value="zarm">Zarma</option>
       </select>
     </div>
   </div>
@@ -102,8 +100,8 @@
     <ul class="nav-links">
       <li><a href="#home">Home</a></li>
       <li><a href="#live">Live & TV</a></li>
-      <li><a href="#news">News & Categories</a></li>
-      <li><a href="#contact">Contact</a></li>
+      <li><a href="#news">Labarai</a></li>
+      <li><a href="#contact">Tuntuɓe Mu</a></li>
       <li><a href="/admin.html" style="color:var(--red);">Admin</a></li>
     </ul>
   </nav>
@@ -123,12 +121,11 @@
     </div>
     <div class="video-grid">
       <div class="video-container" id="mainVideoPlayer">
-        <!-- Zai fara nuna fitaccen bidiyo daga YouTube channel dinku -->
         <iframe src="https://www.youtube.com/embed?listType=user_uploads&list=studentassociationtv" title="Student Association TV Live" allowfullscreen></iframe>
       </div>
       <div class="playlist-box">
         <h3 style="font-size:15px; margin-bottom:12px; color:var(--red);">📌 Shirye-shiryen Kwanan Nan</h3>
-        <div class="playlist-item" onclick="playVideo('https://www.youtube.com/embed?v=live')">
+        <div class="playlist-item">
           <div class="playlist-thumb">▶</div>
           <div class="playlist-info">
             <h4>Student Association TV Live Stream</h4>
@@ -147,15 +144,14 @@
     <div class="section-title">
       <h2>📰 Rukunin <span>Labarai da Shirye-shirye</span></h2>
     </div>
-    
-    <!-- Filter Tabs -->
+
+    <!-- Filter Tabs daidai da Admin -->
     <div class="filter-tabs">
-      <button class="tab-btn active" onclick="filterNews('All')">Duk / Tous</button>
-      <button class="tab-btn" onclick="filterNews('Actualité')">Actualités</button>
-      <button class="tab-btn" onclick="filterNews('Campus')">Campus</button>
-      <button class="tab-btn" onclick="filterNews('Sport')">Sport</button>
-      <button class="tab-btn" onclick="filterNews('Divertissement')">Divertissement</button>
-      <button class="tab-btn" onclick="filterNews('Interview')">Interview</button>
+      <button class="tab-btn active" onclick="filterNews('All')">Duk</button>
+      <button class="tab-btn" onclick="filterNews('Labarai')">Labarai</button>
+      <button class="tab-btn" onclick="filterNews('Wasanni')">Wasanni</button>
+      <button class="tab-btn" onclick="filterNews('Sanarwa')">Sanarwa</button>
+      <button class="tab-btn" onclick="filterNews('Al\'adu')">Al'adu</button>
     </div>
 
     <div class="cards" id="newsContainer"></div>
@@ -164,12 +160,12 @@
   <!-- Contact Section -->
   <section class="section contact-section" id="contact">
     <div class="section-title" style="justify-content: center;">
-      <h2 style="text-align: center;">📞 Tuntuɓe <span>Mu (Contact)</span></h2>
+      <h2 style="text-align: center;">📞 Tuntuɓe <span>Mu</span></h2>
     </div>
     <div class="contact-box">
       <form class="contact-form" onsubmit="sendContactForm(event)">
-        <input type="text" id="cName" placeholder="Sunanka / Votre Nom" required>
-        <input type="email" id="cEmail" placeholder="Email / Courriel" required>
+        <input type="text" id="cName" placeholder="Sunanka" required>
+        <input type="email" id="cEmail" placeholder="Email" required>
         <textarea id="cMessage" placeholder="Rubuta saƙonka ko ra'ayinka a nan..." rows="4" required></textarea>
         <button type="submit" class="btn-whatsapp">💬 Aika saƙo ta WhatsApp</button>
       </form>
@@ -197,34 +193,6 @@
     let allNews = [];
     let currentFilter = 'All';
 
-    const i18n = {
-      ha: {
-        top: "🎓 Student Association TV — Muryar Dalibai",
-        heroT: "Muryar <span>Dalibai</span><br>A Ko'ina, Kowane Lokaci",
-        heroD: "Barka da zuwa Student Association TV — tashar online da aka kirkira domin kawo labarai, ilimi, nishaɗi, wasanni da hira da dalibai.",
-        newsT: "📰 Rukunin <span>Labarai da Shirye-shirye</span>"
-      },
-      fr: {
-        top: "🎓 Student Association TV — La Voix des Étudiants",
-        heroT: "La Voix des <span>Étudiants</span><br>Partout, À Tout Moment",
-        heroD: "Bienvenue sur Student Association TV — votre plateforme en ligne d'actualités, d'éducation, de divertissement, de sport et d'interviews.",
-        newsT: "📰 Actualités & <span>Rubriques</span>"
-      },
-      zarm: {
-        top: "🎓 Student Association TV — Kajiney Minde",
-        heroT: "Kajiney <span>Minde</span><br>Nungu Kulu, Wakati Kulu",
-        heroD: "Kubani ka ka Student Association TV — internayci alhabar, cawyan da haandeyan nungoo.",
-        newsT: "📰 Alhabarwey da <span>Fasaley</span>"
-      }
-    };
-
-    function changeLanguage(lang) {
-      const t = i18n[lang] || i18n.ha;
-      document.getElementById('topSubtitle').innerText = t.top;
-      document.getElementById('heroTitle').innerHTML = t.heroT;
-      document.getElementById('heroDesc').innerText = t.heroD;
-    }
-
     async function fetchNews() {
       try {
         const res = await fetch('/api/news');
@@ -238,7 +206,6 @@
 
     function filterNews(cat) {
       currentFilter = cat;
-      // Highlight active tab
       document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.classList.toggle('active', btn.innerText.includes(cat) || (cat === 'All' && btn.innerText.includes('Duk')));
       });
@@ -247,27 +214,28 @@
 
     function renderNews() {
       const container = document.getElementById('newsContainer');
-      const filtered = currentFilter === 'All' 
-        ? allNews 
-        : allNews.filter(item => item.category && item.category.toLowerCase().includes(currentFilter.toLowerCase()));
+      const filtered = currentFilter === 'All'
+        ? allNews
+        : allNews.filter(item => item.category && item.category.toLowerCase() === currentFilter.toLowerCase());
 
       if (filtered.length > 0) {
         container.innerHTML = '';
         filtered.forEach(item => {
           const originalIndex = allNews.findIndex(n => n.id === item.id);
-          const imgHTML = item.image ? `<img src="/uploads/${item.image}" alt="hoto">` : '🎓';
+          // An gyara yadda yake ɗaukar Base64 image kai tsaye ta hanyar item.image
+          const imgHTML = item.image ? `<img src="${item.image}" alt="hoto">` : '🎓';
           container.innerHTML += `
             <article class="card" onclick="openModal(${originalIndex})">
               <div class="card-img">${imgHTML}</div>
               <div class="card-body">
-                <span class="category-badge">${item.category || 'Actualité'}</span>
+                <span class="category-badge">${item.category || 'Labarai'}</span>
                 <h3>${item.title}</h3>
                 <p>${item.content}</p>
               </div>
             </article>`;
         });
       } else {
-        container.innerHTML = '<p style="color:#888; grid-column:1/-1;">Babu labari a wannan rukunin a yanzu.</p>';
+        container.innerHTML = '<p style="color:#888; grid-column:1/-1; text-align:center;">Babu labari a wannan rukunin a yanzu.</p>';
       }
     }
 
@@ -275,13 +243,13 @@
       const item = allNews[index];
       if (!item) return;
       document.getElementById('modalTitle').innerText = item.title;
-      document.getElementById('modalCategory').innerText = item.category || 'General';
+      document.getElementById('modalCategory').innerText = item.category || 'Labarai';
       document.getElementById('modalDate').innerText = item.date_published || '';
       document.getElementById('modalContent').innerText = item.content;
 
       const imgContainer = document.getElementById('modalImageContainer');
       if (item.image) {
-        imgContainer.innerHTML = `<img src="/uploads/${item.image}" class="modal-img">`;
+        imgContainer.innerHTML = `<img src="${item.image}" class="modal-img">`;
       } else {
         imgContainer.innerHTML = '';
       }
