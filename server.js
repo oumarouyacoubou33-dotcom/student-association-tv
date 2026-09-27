@@ -12,8 +12,9 @@ const ADMIN_USER = "Mrouyac";
 const ADMIN_PASSWORD = "976994mrou";
 
 app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// Ƙara iyakar girman bayanan da za a iya turawa (JSON da URLencoded) zuwa 50MB
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 if (!fs.existsSync('./public')) fs.mkdirSync('./public');
 
@@ -50,7 +51,6 @@ pool.connect()
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Amfani da memoryStorage maimakon diskStorage don maida hoton zuwa Base64
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
@@ -78,7 +78,6 @@ app.post('/api/news', upload.single('image'), async (req, res) => {
         const { title, category, content } = req.body;
         let image = null;
         
-        // Maida hoton zuwa Base64 idan akwai shi
         if (req.file) {
             image = `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`;
         }
