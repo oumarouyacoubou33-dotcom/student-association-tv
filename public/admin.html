@@ -1,152 +1,145 @@
 <!DOCTYPE html>
 <html lang="ha">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Dashboard | DVT</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: Arial, sans-serif; background: #090909; color: #fff; padding: 20px; }
-    .container { max-width: 600px; margin: 30px auto; background: #151515; padding: 25px; border-radius: 10px; border: 1px solid #222; }
-    h2, h3 { margin-bottom: 20px; color: #e50914; }
-    input, textarea, select, button { width: 100%; margin-bottom: 15px; padding: 12px; border-radius: 5px; border: 1px solid #333; background: #1b1b1b; color: white; }
-    button { background: #e50914; border: none; font-weight: bold; cursor: pointer; }
-    button:hover { background: #b80710; }
-    .hidden { display: none; }
-    .news-item { display: flex; justify-content: space-between; align-items: center; background: #1f1f1f; padding: 10px 15px; margin-bottom: 10px; border-radius: 5px; border: 1px solid #333; }
-    .news-item span { font-size: 14px; max-width: 70%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .del-btn { background: #b80710; width: auto; padding: 6px 12px; font-size: 12px; margin: 0; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DVT Admin Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 20px; }
+        .container { max-width: 600px; background: white; padding: 20px; margin: auto; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: #333; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input[type="text"], select, textarea, input[type="file"] { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        textarea { height: 120px; }
+        button { background: #e74c3c; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; width: 100%; font-size: 16px; font-weight: bold; }
+        button:hover { background: #c0392b; }
+        #login-section, #admin-section { display: none; }
+    </style>
 </head>
 <body>
 
-<div class="container" id="loginBox">
-  <h2>🔒 DVT Admin Login</h2>
-  <form id="loginForm">
-    <input type="text" id="adminUser" placeholder="Username (misali: admin)" required>
-    <input type="password" id="adminPass" placeholder="Password (misali: admin123)" required>
-    <button type="submit">Shiga Panel</button>
-  </form>
-</div>
+<div class="container">
+    <!-- Login Section -->
+    <div id="login-section">
+        <h2>Admin Login</h2>
+        <form id="login-form">
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" id="username" required>
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="password" required>
+            </div>
+            <button type="submit">Shiga</button>
+        </form>
+    </div>
 
-<div class="container hidden" id="adminContent">
-  <h2>DVT Admin Panel - Wallafa Labari</h2>
-  <form id="newsForm">
-    <input type="text" id="title" placeholder="Take / Title" required>
-    <select id="category">
-      <option value="Actualité">Actualité</option>
-      <option value="Campus">Campus</option>
-      <option value="Sport">Sport</option>
-      <option value="Divertissement">Divertissement</option>
-      <option value="Interview">Interview</option>
-    </select>
-    <textarea id="content" placeholder="Rubuta cikakken labarin a nan..." rows="5" required></textarea>
-    <label style="font-size:13px; color:#aaa; display:block; margin-bottom:5px;">Loda Hoto (Optional):</label>
-    <input type="file" id="image" accept="image/*">
-    <button type="submit">Wallafa Labari</button>
-  </form>
-
-  <hr style="border:0; border-top:1px solid #333; margin:25px 0;">
-
-  <h3>🗑 Sarrafa da Cire Labarai</h3>
-  <div id="adminNewsList">Na ciro labarai...</div>
-
-  <button onclick="logout()" style="background:#444; margin-top:20px;">Fita / Logout</button>
+    <!-- Admin Panel Section -->
+    <div id="admin-section">
+        <h2>Wallafa Sabon Labari</h2>
+        <form id="news-form">
+            <div class="form-group">
+                <label>Taken Labari (Title)</label>
+                <input type="text" id="title" required>
+            </div>
+            <div class="form-group">
+                <label>Rukuni (Category)</label>
+                <select id="category">
+                    <option value="Labarai">Labarai</option>
+                    <option value="Wasanni">Wasanni</option>
+                    <option value="Sanarwa">Sanarwa</option>
+                    <option value="Al'adu">Al'adu</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Hoton Labari (Image)</label>
+                <!-- Mun saka accept image domin karɓar kowane irin hoto -->
+                <input type="file" id="image" accept="image/*">
+            </div>
+            <div class="form-group">
+                <label>Bayanan Labari (Content)</label>
+                <textarea id="content" required></textarea>
+            </div>
+            <button type="submit">Wallafa Labari</button>
+        </form>
+        <br>
+        <button onclick="logout()" style="background: #333;">Fita (Logout)</button>
+    </div>
 </div>
 
 <script>
-  if (sessionStorage.getItem('dvt_auth') === 'true') {
-    showAdmin();
-  }
-
-  document.getElementById('loginForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const username = document.getElementById('adminUser').value;
-    const password = document.getElementById('adminPass').value;
-    
-    const res = await fetch('/api/admin/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, password })
-    });
-    const data = await res.json();
-    if (data.success) {
-      sessionStorage.setItem('dvt_auth', 'true');
-      showAdmin();
+    // Duba ko an riga an yi login
+    if (localStorage.getItem('dvt_auth') === 'true') {
+        document.getElementById('admin-section').style.display = 'block';
     } else {
-      alert('Username ko Password ba daidai ba ne!');
+        document.getElementById('login-section').style.display = 'block';
     }
-  });
 
-  function showAdmin() {
-    document.getElementById('loginBox').classList.add('hidden');
-    document.getElementById('adminContent').classList.remove('hidden');
-    loadAdminNews();
-  }
+    // Ayyukan Login
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
 
-  function logout() {
-    sessionStorage.removeItem('dvt_auth');
-    location.reload();
-  }
-
-  document.getElementById('newsForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const formData = new FormData();
-    formData.append('title', document.getElementById('title').value);
-    formData.append('category', document.getElementById('category').value);
-    formData.append('content', document.getElementById('content').value);
-    
-    const imageFile = document.getElementById('image').files[0];
-    if (imageFile) formData.append('image', imageFile);
-
-    try {
-      const res = await fetch('/api/news', { method: 'POST', body: formData });
-      const data = await res.json();
-      if (data.success) {
-        alert('An wallafa labarin cikin nasara!');
-        document.getElementById('newsForm').reset();
-        loadAdminNews();
-      } else {
-        alert('An samu matsala!');
-      }
-    } catch (err) {
-      alert('Kuskure wajen aikawa!');
-    }
-  });
-
-  async function loadAdminNews() {
-    try {
-      const res = await fetch('/api/news');
-      const result = await res.json();
-      const listContainer = document.getElementById('adminNewsList');
-      if (result.success && result.data.length > 0) {
-        listContainer.innerHTML = '';
-        result.data.forEach(item => {
-          listContainer.innerHTML += `
-            <div class="news-item">
-              <span>${item.title}</span>
-              <button class="del-btn" onclick="deleteNews(${item.id})">Cire (Delete)</button>
-            </div>`;
+        const res = await fetch('/api/admin/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password })
         });
-      } else {
-        listContainer.innerHTML = '<p style="color:#777; font-size:13px;">Babu labari a ciki.</p>';
-      }
-    } catch (err) { console.error(err); }
-  }
+        const data = await res.json();
 
-  async function deleteNews(id) {
-    if (!confirm("Kuna son goge wannan labarin gaba ɗaya?")) return;
-    try {
-      const res = await fetch(`/api/news/${id}`, { method: 'DELETE' });
-      const result = await res.json();
-      if (result.success) {
-        alert("An goge labarin!");
-        loadAdminNews();
-      }
-    } catch (err) {
-      alert("Kuskure wajen gogewa.");
+        if (data.success) {
+            localStorage.setItem('dvt_auth', 'true');
+            document.getElementById('login-section').style.display = 'none';
+            document.getElementById('admin-section').style.display = 'block';
+        } else {
+            alert(data.message || 'Kuskure wajen shiga!');
+        }
+    });
+
+    // Wallafa Labari tare da Hoto ta hanyar Base64 a Frontend
+    document.getElementById('news-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const title = document.getElementById('title').value;
+        const category = document.getElementById('category').value;
+        const content = document.getElementById('content').value;
+        const imageFile = document.getElementById('image').files[0];
+
+        let imageBase64 = null;
+
+        if (imageFile) {
+            const reader = new FileReader();
+            reader.readAsDataURL(imageFile);
+            reader.onload = async function () {
+                imageBase64 = reader.result;
+                await sendNewsData(title, category, content, imageBase64);
+            };
+        } else {
+            await sendNewsData(title, category, content, null);
+        }
+    });
+
+    async function sendNewsData(title, category, content, image) {
+        const res = await fetch('/api/news', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ title, category, content, image })
+        });
+        const data = await res.json();
+        if (data.success) {
+            alert('An wallafa labarin da nasara!');
+            location.reload();
+        } else {
+            alert('Kuskure: ' + data.message);
+        }
     }
-  }
+
+    function logout() {
+        localStorage.removeItem('dvt_auth');
+        location.reload();
+    }
 </script>
 
 </body>
