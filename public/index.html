@@ -89,6 +89,7 @@
       <select id="langSelect" onchange="changeLanguage(this.value)">
         <option value="ha">Hausa</option>
         <option value="fr">Français</option>
+        <option value="zarm">Zarma</option>
       </select>
     </div>
   </div>
@@ -98,10 +99,10 @@
       <div class="logo-icon">▶</div> D<span>V</span>T
     </a>
     <ul class="nav-links">
-      <li><a href="#home">Home</a></li>
-      <li><a href="#live">Live & TV</a></li>
-      <li><a href="#news">Labarai</a></li>
-      <li><a href="#contact">Tuntuɓe Mu</a></li>
+      <li><a href="#home" id="navHome">Home</a></li>
+      <li><a href="#live" id="navLive">Live & TV</a></li>
+      <li><a href="#news" id="navNews">Labarai</a></li>
+      <li><a href="#contact" id="navContact">Tuntuɓe Mu</a></li>
       <li><a href="/admin.html" style="color:var(--red);">Admin</a></li>
     </ul>
   </nav>
@@ -117,14 +118,14 @@
   <!-- Live & YouTube Section -->
   <section class="section" id="live">
     <div class="section-title">
-      <h2>📺 Tashar <span>YouTube & Live TV</span></h2>
+      <h2 id="liveSectionTitle">📺 Tashar <span>YouTube & Live TV</span></h2>
     </div>
     <div class="video-grid">
       <div class="video-container" id="mainVideoPlayer">
         <iframe src="https://www.youtube.com/embed?listType=user_uploads&list=studentassociationtv" title="Student Association TV Live" allowfullscreen></iframe>
       </div>
       <div class="playlist-box">
-        <h3 style="font-size:15px; margin-bottom:12px; color:var(--red);">📌 Shirye-shiryen Kwanan Nan</h3>
+        <h3 id="playlistTitle" style="font-size:15px; margin-bottom:12px; color:var(--red);">📌 Shirye-shiryen Kwanan Nan</h3>
         <div class="playlist-item">
           <div class="playlist-thumb">▶</div>
           <div class="playlist-info">
@@ -133,7 +134,7 @@
           </div>
         </div>
         <div style="margin-top: 15px; text-align: center;">
-          <a href="https://www.youtube.com/@studentassociationtv" target="_blank" class="btn-whatsapp" style="display:block; text-decoration:none; background:var(--red); font-size:13px; padding:10px;">Ziyarci YouTube Channel ↗</a>
+          <a href="https://www.youtube.com/@studentassociationtv" target="_blank" id="ytBtn" class="btn-whatsapp" style="display:block; text-decoration:none; background:var(--red); font-size:13px; padding:10px;">Ziyarci YouTube Channel ↗</a>
         </div>
       </div>
     </div>
@@ -142,16 +143,16 @@
   <!-- News & Categories Section -->
   <section class="section" id="news">
     <div class="section-title">
-      <h2>📰 Rukunin <span>Labarai da Shirye-shirye</span></h2>
+      <h2 id="newsSectionTitle">📰 Rukunin <span>Labarai da Shirye-shirye</span></h2>
     </div>
 
-    <!-- Filter Tabs daidai da Admin -->
+    <!-- Filter Tabs -->
     <div class="filter-tabs">
-      <button class="tab-btn active" onclick="filterNews('All')">Duk</button>
-      <button class="tab-btn" onclick="filterNews('Labarai')">Labarai</button>
-      <button class="tab-btn" onclick="filterNews('Wasanni')">Wasanni</button>
-      <button class="tab-btn" onclick="filterNews('Sanarwa')">Sanarwa</button>
-      <button class="tab-btn" onclick="filterNews('Al\'adu')">Al'adu</button>
+      <button class="tab-btn active" onclick="filterNews('All')" id="tabAll">Duk</button>
+      <button class="tab-btn" onclick="filterNews('Labarai')" id="tabLabarai">Labarai</button>
+      <button class="tab-btn" onclick="filterNews('Wasanni')" id="tabWasanni">Wasanni</button>
+      <button class="tab-btn" onclick="filterNews('Sanarwa')" id="tabSanarwa">Sanarwa</button>
+      <button class="tab-btn" onclick="filterNews('Al\'adu')" id="tabAladu">Al'adu</button>
     </div>
 
     <div class="cards" id="newsContainer"></div>
@@ -160,14 +161,14 @@
   <!-- Contact Section -->
   <section class="section contact-section" id="contact">
     <div class="section-title" style="justify-content: center;">
-      <h2 style="text-align: center;">📞 Tuntuɓe <span>Mu</span></h2>
+      <h2 id="contactTitle" style="text-align: center;">📞 Tuntuɓe <span>Mu</span></h2>
     </div>
     <div class="contact-box">
       <form class="contact-form" onsubmit="sendContactForm(event)">
         <input type="text" id="cName" placeholder="Sunanka" required>
         <input type="email" id="cEmail" placeholder="Email" required>
         <textarea id="cMessage" placeholder="Rubuta saƙonka ko ra'ayinka a nan..." rows="4" required></textarea>
-        <button type="submit" class="btn-whatsapp">💬 Aika saƙo ta WhatsApp</button>
+        <button type="submit" id="cSendBtn" class="btn-whatsapp">💬 Aika saƙo ta WhatsApp</button>
       </form>
     </div>
   </section>
@@ -185,13 +186,87 @@
   </div>
 
   <footer>
-    <div>© 2026 Student Association TV. Duk haƙƙoƙi an kiyaye su. | @studentassociationtv</div>
+    <div id="footerText">© 2026 Student Association TV. Duk haƙƙoƙi an kiyaye su. | @studentassociationtv</div>
   </footer>
 
   <script>
     const whatsappNumber = "22787316555";
     let allNews = [];
     let currentFilter = 'All';
+
+    const i18n = {
+      ha: {
+        top: "🎓 Student Association TV — Muryar Dalibai",
+        navHome: "Home", navLive: "Live & TV", navNews: "Labarai", navContact: "Tuntuɓe Mu",
+        heroT: "Muryar <span>Dalibai</span><br>A Ko'ina, Kowane Lokaci",
+        heroD: "Barka da zuwa Student Association TV — tashar online da aka kirkira domin kawo labarai, ilimi, nishaɗi, wasanni da hira da dalibai.",
+        liveSec: "📺 Tashar <span>YouTube & Live TV</span>",
+        playlistT: "📌 Shirye-shiryen Kwanan Nan",
+        ytBtn: "Ziyarci YouTube Channel ↗",
+        newsSec: "📰 Rukunin <span>Labarai da Shirye-shirye</span>",
+        tabAll: "Duk", tabLab: "Labarai", tabWas: "Wasanni", tabSan: "Sanarwa", tabAla: "Al'adu",
+        contactT: "📞 Tuntuɓe <span>Mu</span>",
+        cName: "Sunanka", cMsg: "Rubuta saƙonka ko ra'ayinka a nan...", cBtn: "💬 Aika saƙo ta WhatsApp",
+        footer: "© 2026 Student Association TV. Duk haƙƙoƙi an kiyaye su. | @studentassociationtv",
+        noNews: "Babu labari a wannan rukunin a yanzu."
+      },
+      fr: {
+        top: "🎓 Student Association TV — La Voix des Étudiants",
+        navHome: "Accueil", navLive: "Direct & TV", navNews: "Actualités", navContact: "Contact",
+        heroT: "La Voix des <span>Étudiants</span><br>Partout, À Tout Moment",
+        heroD: "Bienvenue sur Student Association TV — votre plateforme en ligne d'actualités, d'éducation, de divertissement, de sport et d'interviews.",
+        liveSec: "📺 Chaîne <span>YouTube & Live TV</span>",
+        playlistT: "📌 Dernières Émissions",
+        ytBtn: "Visiter la chaîne YouTube ↗",
+        newsSec: "📰 Actualités & <span>Rubriques</span>",
+        tabAll: "Tous", tabLab: "Actualités", tabWas: "Sport", tabSan: "Annonces", tabAla: "Culture",
+        contactT: "📞 Contactez-<span>nous</span>",
+        cName: "Votre Nom", cMsg: "Écrivez votre message ici...", cBtn: "💬 Envoyer via WhatsApp",
+        footer: "© 2026 Student Association TV. Tous droits réservés. | @studentassociationtv",
+        noNews: "Aucune actualité dans cette catégorie pour le moment."
+      },
+      zarm: {
+        top: "🎓 Student Association TV — Kajiney Minde",
+        navHome: "Gando", navLive: "Live & TV", navNews: "Alhabarwey", navContact: "Sahan Murna",
+        heroT: "Kajiney <span>Minde</span><br>Nungu Kulu, Wakati Kulu",
+        heroD: "Kubani ka ka Student Association TV — internayci alhabar, cawyan da haandeyan nungoo.",
+        liveSec: "📺 <span>YouTube & Live TV</span> Minde",
+        playlistT: "📌 Waati Gando Fasaley",
+        ytBtn: "Kadda YouTube Channel ↗",
+        newsSec: "📰 Alhabarwey da <span>Fasaley</span>",
+        tabAll: "Kulu", tabLab: "Alhabarwey", tabWas: "Wasa", tabSan: "Tuhari", tabAla: "Aladu",
+        contactT: "📞 Sahan <span>Murna</span>",
+        cName: "Ni maa", cMsg: "Hantum ni sanbao wala miila...", cBtn: "💬 Sanba saaku WhatsApp ra",
+        footer: "© 2026 Student Association TV. Alhakki kul gundo gaa. | @studentassociationtv",
+        noNews: "Alhabar kul sinda fasalu wo ra sohoka."
+      }
+    };
+
+    function changeLanguage(lang) {
+      const t = i18n[lang] || i18n.ha;
+      document.getElementById('topSubtitle').innerText = t.top;
+      document.getElementById('navHome').innerText = t.navHome;
+      document.getElementById('navLive').innerText = t.navLive;
+      document.getElementById('navNews').innerText = t.navNews;
+      document.getElementById('navContact').innerText = t.navContact;
+      document.getElementById('heroTitle').innerHTML = t.heroT;
+      document.getElementById('heroDesc').innerText = t.heroD;
+      document.getElementById('liveSectionTitle').innerHTML = t.liveSec;
+      document.getElementById('playlistTitle').innerText = t.playlistT;
+      document.getElementById('ytBtn').innerText = t.ytBtn;
+      document.getElementById('newsSectionTitle').innerHTML = t.newsSec;
+      document.getElementById('tabAll').innerText = t.tabAll;
+      document.getElementById('tabLabarai').innerText = t.tabLab;
+      document.getElementById('tabWasanni').innerText = t.tabWas;
+      document.getElementById('tabSanarwa').innerText = t.tabSan;
+      document.getElementById('tabAladu').innerText = t.tabAla;
+      document.getElementById('contactTitle').innerHTML = t.contactT;
+      document.getElementById('cName').placeholder = t.cName;
+      document.getElementById('cMessage').placeholder = t.cMsg;
+      document.getElementById('cSendBtn').innerText = t.cBtn;
+      document.getElementById('footerText').innerText = t.footer;
+      renderNews();
+    }
 
     async function fetchNews() {
       try {
@@ -206,9 +281,6 @@
 
     function filterNews(cat) {
       currentFilter = cat;
-      document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.innerText.includes(cat) || (cat === 'All' && btn.innerText.includes('Duk')));
-      });
       renderNews();
     }
 
@@ -218,11 +290,13 @@
         ? allNews
         : allNews.filter(item => item.category && item.category.toLowerCase() === currentFilter.toLowerCase());
 
+      const lang = document.getElementById('langSelect').value;
+      const t = i18n[lang] || i18n.ha;
+
       if (filtered.length > 0) {
         container.innerHTML = '';
         filtered.forEach(item => {
           const originalIndex = allNews.findIndex(n => n.id === item.id);
-          // An gyara yadda yake ɗaukar Base64 image kai tsaye ta hanyar item.image
           const imgHTML = item.image ? `<img src="${item.image}" alt="hoto">` : '🎓';
           container.innerHTML += `
             <article class="card" onclick="openModal(${originalIndex})">
@@ -235,7 +309,7 @@
             </article>`;
         });
       } else {
-        container.innerHTML = '<p style="color:#888; grid-column:1/-1; text-align:center;">Babu labari a wannan rukunin a yanzu.</p>';
+        container.innerHTML = `<p style="color:#888; grid-column:1/-1; text-align:center;">${t.noNews}</p>`;
       }
     }
 

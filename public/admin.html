@@ -3,98 +3,151 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DVT Admin Panel - Cikakke</title>
+    <title>DVT - Babban Edita (Admin Dashboard)</title>
     <style>
-        * { box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0f172a; color: #f8fafc; margin: 0; padding: 20px; }
-        .container { max-width: 750px; background: #1e293b; padding: 30px; margin: 20px auto; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); border: 1px solid #334155; }
-        h2, h3 { text-align: center; color: #38bdf8; margin-bottom: 25px; }
-        .form-group { margin-bottom: 20px; }
-        label { display: block; margin-bottom: 8px; font-weight: 600; color: #cbd5e1; }
-        input[type="text"], select, textarea, input[type="file"], input[type="password"] { width: 100%; padding: 12px; background: #0f172a; border: 1px solid #475569; color: #fff; border-radius: 6px; font-size: 15px; }
-        input:focus, select:focus, textarea:focus { outline: none; border-color: #38bdf8; }
-        textarea { height: 120px; resize: vertical; }
-        button { background: #0284c7; color: white; padding: 12px; border: none; border-radius: 6px; cursor: pointer; width: 100%; font-size: 16px; font-weight: bold; transition: background 0.3s; }
-        button:hover { background: #0369a1; }
-        .logout-btn { background: #dc2626; margin-top: 15px; }
-        .logout-btn:hover { background: #b91c1c; }
-        #login-section, #admin-section { display: none; }
-        .preview-img { margin-top: 10px; max-width: 100%; height: 150px; object-fit: cover; border-radius: 6px; display: none; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: #0b0f19; color: #f8fafc; padding: 20px; line-height: 1.5; }
         
-        .news-list { margin-top: 30px; border-top: 2px solid #334155; padding-top: 20px; }
-        .news-item { background: #0f172a; padding: 15px; border-radius: 8px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #334155; }
-        .news-info h4 { margin: 0 0 5px 0; color: #f1c40f; }
-        .news-info p { margin: 0; font-size: 13px; color: #94a3b8; }
-        .delete-btn { background: #ef4444; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; width: auto; }
-        .delete-btn:hover { background: #dc2626; }
+        .container { max-width: 850px; margin: 30px auto; }
+        
+        /* Card & Box Styles */
+        .card { background: #1e293b; border-radius: 14px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid #334155; overflow: hidden; margin-bottom: 30px; }
+        .card-header { background: #0f172a; padding: 20px 25px; border-bottom: 1px solid #334155; display: flex; justify-content: space-between; align-items: center; }
+        .card-header h2, .card-header h3 { color: #38bdf8; font-size: 20px; display: flex; align-items: center; gap: 10px; }
+        .card-body { padding: 25px; }
+
+        /* Forms */
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group.full { grid-column: span 2; }
+        
+        label { display: block; margin-bottom: 8px; font-weight: 600; color: #cbd5e1; font-size: 14px; }
+        input[type="text"], select, textarea, input[type="password"] {
+            width: 100%; padding: 12px 15px; background: #0f172a; border: 1px solid #475569; color: #fff; border-radius: 8px; font-size: 14px; transition: all 0.3s ease;
+        }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: #38bdf8; box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15); }
+        textarea { height: 130px; resize: vertical; }
+
+        /* File Upload Custom Box */
+        .file-upload-box { border: 2px dashed #475569; padding: 20px; text-align: center; border-radius: 8px; background: #0f172a; cursor: pointer; transition: 0.3s; }
+        .file-upload-box:hover { border-color: #38bdf8; }
+        .file-upload-box input { display: none; }
+        .preview-img { margin-top: 15px; max-width: 100%; max-height: 200px; object-fit: cover; border-radius: 6px; display: none; border: 1px solid #475569; }
+
+        /* Buttons */
+        .btn { background: #0284c7; color: white; padding: 12px 20px; border: none; border-radius: 8px; cursor: pointer; width: 100%; font-size: 16px; font-weight: bold; transition: background 0.3s, transform 0.1s; display: flex; justify-content: center; align-items: center; gap: 8px; }
+        .btn:hover { background: #0369a1; }
+        .btn:active { transform: scale(0.98); }
+        .btn-danger { background: #dc2626; }
+        .btn-danger:hover { background: #b91c1c; }
+        .btn-sm { padding: 6px 12px; font-size: 13px; width: auto; border-radius: 6px; }
+
+        /* Login Screen */
+        #login-section { max-width: 420px; margin: 80px auto; }
+        #admin-section { display: none; }
+
+        /* News Management List */
+        .news-list { margin-top: 10px; }
+        .news-item { background: #0f172a; padding: 15px 20px; border-radius: 10px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #334155; transition: 0.2s; }
+        .news-item:hover { border-color: #64748b; }
+        .news-info h4 { margin: 0 0 5px 0; color: #f8fafc; font-size: 16px; }
+        .news-info p { margin: 0; font-size: 12px; color: #94a3b8; }
+        
+        .badge-cat { background: #0284c7; color: white; padding: 2px 8px; border-radius: 4px; font-size: 11px; margin-right: 5px; }
+
+        /* Top Header in Admin */
+        .admin-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; background: #1e293b; padding: 15px 25px; border-radius: 12px; border: 1px solid #334155; }
+        .admin-top h1 { font-size: 22px; color: #f8fafc; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <!-- Login Section -->
-    <div id="login-section">
-        <h2>Shiga Admin</h2>
-        <form id="login-form">
-            <div class="form-group">
-                <label>Username</label>
-                <input type="text" id="username" required placeholder="Shigar da username">
-            </div>
-            <div class="form-group">
-                <label>Password</label>
-                <input type="password" id="password" required placeholder="Shigar da password">
-            </div>
-            <button type="submit">Shiga Ciki</button>
-        </form>
+    <div id="login-section" class="card">
+        <div class="card-header" style="justify-content: center;">
+            <h2>🔐 Shiga Admin Panel</h2>
+        </div>
+        <div class="card-body">
+            <form id="login-form">
+                <div class="form-group">
+                    <label>Sunan Mai Amfani (Username)</label>
+                    <input type="text" id="username" required placeholder="Shigar da username...">
+                </div>
+                <div class="form-group">
+                    <label>Kalmar Sirri (Password)</label>
+                    <input type="password" id="password" required placeholder="Shigar da password...">
+                </div>
+                <button type="submit" class="btn">Shiga Ciki</button>
+            </form>
+        </div>
     </div>
 
-    <!-- Admin Panel Section -->
+    <!-- Admin Panel Dashboard -->
     <div id="admin-section">
-        <h2>Wallafa Sabon Labari</h2>
-        <form id="news-form">
-            <div class="form-group">
-                <label>Taken Labari (Title)</label>
-                <input type="text" id="title" required placeholder="Misali: Taron Ɗalibai na Yau">
-            </div>
-            <div class="form-group">
-                <label>Rukuni (Category)</label>
-                <!-- An saita su da Hausa zalla daidai da abin da babban shafin ke buƙata -->
-                <select id="category">
-                    <option value="Labarai">Labarai</option>
-                    <option value="Wasanni">Wasanni</option>
-                    <option value="Sanarwa">Sanarwa</option>
-                    <option value="Al'adu">Al'adu</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Hoton Labari (Image)</label>
-                <input type="file" id="image" accept="image/*" onchange="previewImage(event)">
-                <img id="img-preview" class="preview-img" alt="Preview">
-            </div>
-            <div class="form-group">
-                <label>Cikakken Bayani (Content)</label>
-                <textarea id="content" required placeholder="Rubuta bayanin labari anan..."></textarea>
-            </div>
-            <button type="submit">Wallafa Labari Now</button>
-        </form>
+        <div class="admin-top">
+            <h1>Panel din Gudanarwa — DVT</h1>
+            <button class="btn btn-danger btn-sm" onclick="logout()">Fita (Logout)</button>
+        </div>
 
-        <div class="news-list">
-            <h3>Duk Labaran da Aka Wallafa</h3>
-            <div id="admin-news-container">
-                <p style="text-align: center; color: #94a3b8;">Ana lodi labarai...</p>
+        <!-- Add News Card -->
+        <div class="card">
+            <div class="card-header">
+                <h3>📝 Wallafa Sabon Labari</h3>
+            </div>
+            <div class="card-body">
+                <form id="news-form">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Taken Labari (Title)</label>
+                            <input type="text" id="title" required placeholder="Misali: Taron Dalibai na Yau">
+                        </div>
+                        <div class="form-group">
+                            <label>Rukuni (Category)</label>
+                            <select id="category">
+                                <option value="Labarai">Labarai</option>
+                                <option value="Wasanni">Wasanni</option>
+                                <option value="Sanarwa">Sanarwa</option>
+                                <option value="Al'adu">Al'adu</option>
+                            </select>
+                        </div>
+                        <div class="form-group full">
+                            <label>Hoton Labari</label>
+                            <div class="file-upload-box" onclick="document.getElementById('image').click()">
+                                <span style="color: #94a3b8; font-size: 14px;">📁 Danna anan domin zaɓar hoto daga wayarka</span>
+                                <input type="file" id="image" accept="image/*" onchange="previewImage(event)">
+                                <img id="img-preview" class="preview-img" alt="Preview">
+                            </div>
+                        </div>
+                        <div class="form-group full">
+                            <label>Cikakken Bayanin Labari (Content)</label>
+                            <textarea id="content" required placeholder="Rubuta cikakken bayanin labarin a nan..."></textarea>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn">🚀 Wallafa Labari Yanzu</button>
+                </form>
             </div>
         </div>
 
-        <button class="logout-btn" onclick="logout()">Fita (Logout)</button>
+        <!-- Manage News List Card -->
+        <div class="card">
+            <div class="card-header">
+                <h3>📊 Jerin Labaran da Aka Wallafa</h3>
+            </div>
+            <div class="card-body">
+                <div class="news-list" id="admin-news-container">
+                    <p style="text-align: center; color: #94a3b8;">Ana lodi labarai...</p>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
 <script>
     if (localStorage.getItem('dvt_auth') === 'true') {
+        document.getElementById('login-section').style.display = 'none';
         document.getElementById('admin-section').style.display = 'block';
         loadAdminNews();
-    } else {
-        document.getElementById('login-section').style.display = 'block';
     }
 
     document.getElementById('login-form').addEventListener('submit', async (e) => {
@@ -186,9 +239,9 @@
                     div.innerHTML = `
                         <div class="news-info">
                             <h4>${item.title}</h4>
-                            <p>Rukuni: <b>${item.category || 'General'}</b> | KWANATA: ${item.date_published || 'N/A'}</p>
+                            <p><span class="badge-cat">${item.category || 'Labarai'}</span> KWANATA: ${item.date_published || 'N/A'}</p>
                         </div>
-                        <button class="delete-btn" onclick="deleteNews(${item.id})">Share</button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteNews(${item.id})">Share</button>
                     `;
                     container.appendChild(div);
                 });
