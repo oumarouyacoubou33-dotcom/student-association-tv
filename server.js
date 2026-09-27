@@ -12,7 +12,6 @@ const ADMIN_USER = "Mrouyac";
 const ADMIN_PASSWORD = "976994mrou";
 
 app.use(cors());
-// Ƙara iyakar girman bayanan da za a iya turawa (JSON da URLencoded) zuwa 50MB
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
@@ -51,8 +50,7 @@ pool.connect()
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-const storage = multer.memoryStorage();
-const upload = multer({ storage });
+const upload = multer();
 
 app.post('/api/admin/login', (req, res) => {
     const { username, password } = req.body;
@@ -73,13 +71,20 @@ app.get('/api/news', async (req, res) => {
     }
 });
 
-app.post('/api/news', upload.single('image'), async (req, res) => {
+// Mun yi amfani da upload.any() domin karɓar komai ko ta wace kala ce admin.html ke tura shi
+app.post('/api/news', upload.any(), async (req, res) => {
     try {
-        const { title, category, content } = req.body;
-        let image = null;
-        
-        if (req.file) {
-            image = `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`;
+        const title = req.body.title;
+        const category = req.body.category;
+        const content = req.body.content;
+        let image = req.body.image || null;
+
+        // Idan an tura hoton ta multer (file)
+        if (req.files && req.files.length > 0) {
+            const file = req.files.find(f => f.fieldname === 'image') || req.files[0];
+            if (file) {
+                image = `data:${file.mimetype};base64,${file.buffer.toString('base64')}`;
+            }
         }
 
         const date_published = new Date().toLocaleDateString('ha-NG', { year: 'numeric', month: 'short', day: 'numeric' });
