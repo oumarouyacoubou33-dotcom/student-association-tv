@@ -41,8 +41,8 @@
     .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
     .card { background: var(--dark2); border: 1px solid #292929; border-radius: 10px; overflow: hidden; cursor: pointer; transition: .3s; }
     .card:hover { transform: translateY(-5px); border-color: var(--red); }
-    .card-img { height: 180px; background: #222; overflow: hidden; display: flex; align-items: center; justify-content: center; font-size: 40px; }
-    .card-img img { width: 100%; height: 100%; object-fit: cover; }
+    .card-img { height: 180px; background: #222; overflow: hidden; display: flex; align-items: center; justify-content: center; font-size: 40px; position: relative; }
+    .card-img img, .card-img video { width: 100%; height: 100%; object-fit: cover; }
     .card-body { padding: 15px; }
     .category-badge { display: inline-block; background: var(--red); padding: 3px 8px; border-radius: 4px; font-size: 11px; margin-bottom: 8px; }
     .card h3 { font-size: 17px; margin-bottom: 8px; }
@@ -51,7 +51,7 @@
     /* Live & Video Section */
     .video-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 25px; }
     .video-container { background: #000; border-radius: 10px; overflow: hidden; border: 1px solid #282828; aspect-ratio: 16/9; display: flex; justify-content: center; align-items: center; }
-    .video-container iframe { width: 100%; height: 100%; border: none; }
+    .video-container iframe, .video-container video { width: 100%; height: 100%; border: none; object-fit: cover; }
     .playlist-box { background: var(--dark2); border-radius: 10px; border: 1px solid #282828; padding: 20px; max-height: 450px; overflow-y: auto; }
     .playlist-item { display: flex; gap: 12px; margin-bottom: 15px; cursor: pointer; padding-bottom: 10px; border-bottom: 1px solid #222; }
     .playlist-thumb { width: 90px; height: 55px; background: #333; border-radius: 4px; display: flex; justify-content: center; align-items: center; font-size: 20px; flex-shrink: 0; }
@@ -70,7 +70,7 @@
     .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 2000; overflow-y: auto; padding: 20px; }
     .modal-content { background: #151515; max-width: 700px; margin: 40px auto; padding: 25px; border-radius: 10px; border: 1px solid #333; position: relative; }
     .close-btn { position: absolute; top: 15px; right: 20px; font-size: 24px; color: #fff; cursor: pointer; }
-    .modal-img { width: 100%; max-height: 350px; object-fit: cover; border-radius: 8px; margin-bottom: 15px; }
+    .modal-img, .modal-video { width: 100%; max-height: 350px; object-fit: cover; border-radius: 8px; margin-bottom: 15px; background: #000; }
 
     footer { background: #050505; padding: 30px 5%; text-align: center; color: #666; font-size: 13px; border-top: 1px solid #222; }
 
@@ -177,7 +177,7 @@
   <div id="newsModal" class="modal">
     <div class="modal-content">
       <span class="close-btn" onclick="closeModal()">&times;</span>
-      <div id="modalImageContainer"></div>
+      <div id="modalMediaContainer"></div>
       <span id="modalCategory" class="category-badge"></span>
       <h2 id="modalTitle" style="margin: 10px 0;"></h2>
       <p id="modalDate" style="color:#777; font-size:12px; margin-bottom:15px;"></p>
@@ -297,10 +297,17 @@
         container.innerHTML = '';
         filtered.forEach(item => {
           const originalIndex = allNews.findIndex(n => n.id === item.id);
-          const imgHTML = item.image ? `<img src="${item.image}" alt="hoto">` : '🎓';
+          let mediaHTML = '🎓';
+          if (item.image) {
+            if (item.image.startsWith('data:video') || item.video === true || item.image.includes('video')) {
+              mediaHTML = `<video src="${item.image}" muted></video>`;
+            } else {
+              mediaHTML = `<img src="${item.image}" alt="media">`;
+            }
+          }
           container.innerHTML += `
             <article class="card" onclick="openModal(${originalIndex})">
-              <div class="card-img">${imgHTML}</div>
+              <div class="card-img">${mediaHTML}</div>
               <div class="card-body">
                 <span class="category-badge">${item.category || 'Actualités'}</span>
                 <h3>${item.title}</h3>
@@ -321,17 +328,22 @@
       document.getElementById('modalDate').innerText = item.date_published || '';
       document.getElementById('modalContent').innerText = item.content;
 
-      const imgContainer = document.getElementById('modalImageContainer');
+      const mediaContainer = document.getElementById('modalMediaContainer');
       if (item.image) {
-        imgContainer.innerHTML = `<img src="${item.image}" class="modal-img">`;
+        if (item.image.startsWith('data:video') || item.image.includes('video/')) {
+          mediaContainer.innerHTML = `<video src="${item.image}" controls class="modal-video" autoplay></video>`;
+        } else {
+          mediaContainer.innerHTML = `<img src="${item.image}" class="modal-img">`;
+        }
       } else {
-        imgContainer.innerHTML = '';
+        mediaContainer.innerHTML = '';
       }
       document.getElementById('newsModal').style.display = 'block';
     }
 
     function closeModal() {
       document.getElementById('newsModal').style.display = 'none';
+      document.getElementById('modalMediaContainer').innerHTML = '';
     }
 
     function sendContactForm(e) {

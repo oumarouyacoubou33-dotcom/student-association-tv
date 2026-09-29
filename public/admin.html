@@ -29,7 +29,7 @@
         .file-upload-box { border: 2px dashed #475569; padding: 20px; text-align: center; border-radius: 8px; background: #0f172a; cursor: pointer; transition: 0.3s; }
         .file-upload-box:hover { border-color: #38bdf8; }
         .file-upload-box input { display: none; }
-        .preview-img { margin-top: 15px; max-width: 100%; max-height: 200px; object-fit: cover; border-radius: 6px; display: none; border: 1px solid #475569; }
+        .preview-media { margin-top: 15px; max-width: 100%; max-height: 200px; object-fit: cover; border-radius: 6px; display: none; border: 1px solid #475569; }
 
         .btn { background: #0284c7; color: white; padding: 12px 20px; border: none; border-radius: 8px; cursor: pointer; width: 100%; font-size: 16px; font-weight: bold; transition: background 0.3s, transform 0.1s; display: flex; justify-content: center; align-items: center; gap: 8px; }
         .btn:hover { background: #0369a1; }
@@ -83,17 +83,17 @@
             <button class="btn btn-danger btn-sm" onclick="logout()">Déconnexion</button>
         </div>
 
-        <!-- Add News Card -->
+        <!-- Add News/Media Card -->
         <div class="card">
             <div class="card-header">
-                <h3>📝 Publier une Actualité</h3>
+                <h3>🎬 Publier une Actualité ou une Vidéo</h3>
             </div>
             <div class="card-body">
                 <form id="news-form">
                     <div class="form-grid">
                         <div class="form-group">
-                            <label>Titre de l'Actualité</label>
-                            <input type="text" id="title" required placeholder="Ex: Réunion des élèves aujourd'hui">
+                            <label>Titre</label>
+                            <input type="text" id="title" required placeholder="Ex: Vidéo de l'événement des élèves">
                         </div>
                         <div class="form-group">
                             <label>Rubrique (Category)</label>
@@ -105,16 +105,16 @@
                             </select>
                         </div>
                         <div class="form-group full">
-                            <label>Image de l'Actualité</label>
-                            <div class="file-upload-box" onclick="document.getElementById('image').click()">
-                                <span style="color: #94a3b8; font-size: 14px;">📁 Cliquez ici pour choisir une image depuis votre appareil</span>
-                                <input type="file" id="image" accept="image/*" onchange="previewImage(event)">
-                                <img id="img-preview" class="preview-img" alt="Aperçu">
+                            <label>Média (Image ou Vidéo)</label>
+                            <div class="file-upload-box" onclick="document.getElementById('mediaFile').click()">
+                                <span style="color: #94a3b8; font-size: 14px;" id="uploadLabel">📁 Cliquez pour choisir une image ou une vidéo</span>
+                                <input type="file" id="mediaFile" accept="image/*,video/*" onchange="previewMedia(event)">
+                                <div id="previewContainer"></div>
                             </div>
                         </div>
                         <div class="form-group full">
-                            <label>Contenu de l'Actualité</label>
-                            <textarea id="content" required placeholder="Rédigez les détails de l'actualité ici..."></textarea>
+                            <label>Contenu / Description</label>
+                            <textarea id="content" required placeholder="Rédigez les détails ici..."></textarea>
                         </div>
                     </div>
                     <button type="submit" class="btn">🚀 Publier maintenant</button>
@@ -125,11 +125,11 @@
         <!-- Manage News List Card -->
         <div class="card">
             <div class="card-header">
-                <h3>📊 Liste des Actualités Publiées</h3>
+                <h3>📊 Liste des Publications</h3>
             </div>
             <div class="card-body">
                 <div class="news-list" id="admin-news-container">
-                    <p style="text-align: center; color: #94a3b8;">Chargement des actualités...</p>
+                    <p style="text-align: center; color: #94a3b8;">Chargement...</p>
                 </div>
             </div>
         </div>
@@ -162,22 +162,30 @@
                 document.getElementById('admin-section').style.display = 'block';
                 loadAdminNews();
             } else {
-                alert(data.message || 'Nom d’utilisateur ou mot de passe incorrect !');
+                alert(data.message || 'Identifiants incorrects !');
             }
         } catch (err) {
             alert('Erreur de connexion au serveur !');
         }
     });
 
-    function previewImage(event) {
-        const reader = new FileReader();
-        reader.onload = function(){
-            const output = document.getElementById('img-preview');
-            output.src = reader.result;
-            output.style.display = 'block';
-        };
-        if(event.target.files[0]) {
-            reader.readAsDataURL(event.target.files[0]);
+    function previewMedia(event) {
+        const file = event.target.files[0];
+        const container = document.getElementById('previewContainer');
+        const label = document.getElementById('uploadLabel');
+        container.innerHTML = '';
+        
+        if (file) {
+            label.innerText = `Fichier sélectionné : ${file.name}`;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                if (file.type.startsWith('video/')) {
+                    container.innerHTML = `<video src="${e.target.result}" class="preview-media" controls style="display:block; margin: 15px auto;"></video>`;
+                } else {
+                    container.innerHTML = `<img src="${e.target.result}" class="preview-media" style="display:block; margin: 15px auto;">`;
+                }
+            };
+            reader.readAsDataURL(file);
         }
     }
 
@@ -186,11 +194,11 @@
         const title = document.getElementById('title').value;
         const category = document.getElementById('category').value;
         const content = document.getElementById('content').value;
-        const imageFile = document.getElementById('image').files[0];
+        const mediaFile = document.getElementById('mediaFile').files[0];
 
-        if (imageFile) {
+        if (mediaFile) {
             const reader = new FileReader();
-            reader.readAsDataURL(imageFile);
+            reader.readAsDataURL(mediaFile);
             reader.onload = async function () {
                 await sendNewsData(title, category, content, reader.result);
             };
@@ -208,13 +216,13 @@
             });
             const data = await res.json();
             if (data.success) {
-                alert('Actualité publiée avec succès !');
+                alert('Publication réussie !');
                 location.reload();
             } else {
                 alert('Erreur : ' + data.message);
             }
         } catch (err) {
-            alert('Erreur lors de l’envoi de l’actualité.');
+            alert('Erreur lors de l’envoi.');
         }
     }
 
@@ -239,26 +247,26 @@
                     container.appendChild(div);
                 });
             } else {
-                container.innerHTML = '<p style="text-align: center; color: #94a3b8;">Aucune actualité publiée pour le moment.</p>';
+                container.innerHTML = '<p style="text-align: center; color: #94a3b8;">Aucune publication pour le moment.</p>';
             }
         } catch (err) {
-            console.error('Erreur lors du chargement des actualités :', err);
+            console.error(err);
         }
     }
 
     async function deleteNews(id) {
-        if (confirm('Voulez-vous vraiment supprimer cette actualité ?')) {
+        if (confirm('Voulez-vous vraiment supprimer cette publication ?')) {
             try {
                 const res = await fetch(`/api/news/${id}`, { method: 'DELETE' });
                 const data = await res.json();
                 if (data.success) {
-                    alert('Actualité supprimée !');
+                    alert('Supprimé avec succès !');
                     loadAdminNews();
                 } else {
-                    alert('Erreur lors de la suppression.');
+                    alert('Erreur.');
                 }
             } catch (err) {
-                alert('Erreur de connexion au serveur.');
+                alert('Erreur serveur.');
             }
         }
     }
