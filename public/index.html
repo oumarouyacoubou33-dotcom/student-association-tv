@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ha">
+<html lang="fr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -83,12 +83,12 @@
 <body>
 
   <div class="topbar">
-    <div id="topSubtitle">🎓 Student Association TV — Muryar Dalibai</div>
+    <div id="topSubtitle">🎓 Student Association TV — La Voix des Élèves</div>
     <div class="lang-selector">
-      🌐 Language:
+      🌐 Langue :
       <select id="langSelect" onchange="changeLanguage(this.value)">
+        <option value="fr" selected>Français</option>
         <option value="ha">Hausa</option>
-        <option value="fr">Français</option>
         <option value="zarm">Zarma</option>
       </select>
     </div>
@@ -99,10 +99,10 @@
       <div class="logo-icon">▶</div> D<span>V</span>T
     </a>
     <ul class="nav-links">
-      <li><a href="#home" id="navHome">Home</a></li>
-      <li><a href="#live" id="navLive">Live & TV</a></li>
-      <li><a href="#news" id="navNews">Labarai</a></li>
-      <li><a href="#contact" id="navContact">Tuntuɓe Mu</a></li>
+      <li><a href="#home" id="navHome">Accueil</a></li>
+      <li><a href="#live" id="navLive">Direct & TV</a></li>
+      <li><a href="#news" id="navNews">Actualités</a></li>
+      <li><a href="#contact" id="navContact">Contact</a></li>
       <li><a href="/admin.html" style="color:var(--red);">Admin</a></li>
     </ul>
   </nav>
@@ -110,22 +110,22 @@
   <section class="hero" id="home">
     <div class="hero-content">
       <div class="live-badge"><span class="live-dot"></span><span>LIVE 24/7</span></div>
-      <h1 id="heroTitle">Muryar <span>Dalibai</span><br>A Ko'ina, Kowane Lokaci</h1>
-      <p id="heroDesc">Barka da zuwa Student Association TV — tashar online da aka kirkira domin kawo labarai, ilimi, nishaɗi, wasanni da hira da dalibai.</p>
+      <h1 id="heroTitle">La Voix des <span>Élèves</span><br>Partout, À Tout Moment</h1>
+      <p id="heroDesc">Bienvenue sur Student Association TV — votre plateforme en ligne d'actualités, d'éducation, de divertissement, de sport et d'interviews.</p>
     </div>
   </section>
 
   <!-- Live & YouTube Section -->
   <section class="section" id="live">
     <div class="section-title">
-      <h2 id="liveSectionTitle">📺 Tashar <span>YouTube & Live TV</span></h2>
+      <h2 id="liveSectionTitle">📺 Chaîne <span>YouTube & Live TV</span></h2>
     </div>
     <div class="video-grid">
       <div class="video-container" id="mainVideoPlayer">
         <iframe src="https://www.youtube.com/embed?listType=user_uploads&list=studentassociationtv" title="Student Association TV Live" allowfullscreen></iframe>
       </div>
       <div class="playlist-box">
-        <h3 id="playlistTitle" style="font-size:15px; margin-bottom:12px; color:var(--red);">📌 Shirye-shiryen Kwanan Nan</h3>
+        <h3 id="playlistTitle" style="font-size:15px; margin-bottom:12px; color:var(--red);">📌 Dernières Émissions</h3>
         <div class="playlist-item">
           <div class="playlist-thumb">▶</div>
           <div class="playlist-info">
@@ -134,7 +134,7 @@
           </div>
         </div>
         <div style="margin-top: 15px; text-align: center;">
-          <a href="https://www.youtube.com/@studentassociationtv" target="_blank" id="ytBtn" class="btn-whatsapp" style="display:block; text-decoration:none; background:var(--red); font-size:13px; padding:10px;">Ziyarci YouTube Channel ↗</a>
+          <a href="https://www.youtube.com/@studentassociationtv" target="_blank" id="ytBtn" class="btn-whatsapp" style="display:block; text-decoration:none; background:var(--red); font-size:13px; padding:10px;">Visiter la chaîne YouTube ↗</a>
         </div>
       </div>
     </div>
@@ -143,16 +143,16 @@
   <!-- News & Categories Section -->
   <section class="section" id="news">
     <div class="section-title">
-      <h2 id="newsSectionTitle">📰 Rukunin <span>Labarai da Shirye-shirye</span></h2>
+      <h2 id="newsSectionTitle">📰 Actualités & <span>Rubriques</span></h2>
     </div>
 
     <!-- Filter Tabs -->
     <div class="filter-tabs">
-      <button class="tab-btn active" onclick="filterNews('All')" id="tabAll">Duk</button>
-      <button class="tab-btn" onclick="filterNews('Labarai')" id="tabLabarai">Labarai</button>
-      <button class="tab-btn" onclick="filterNews('Wasanni')" id="tabWasanni">Wasanni</button>
-      <button class="tab-btn" onclick="filterNews('Sanarwa')" id="tabSanarwa">Sanarwa</button>
-      <button class="tab-btn" onclick="filterNews('Al\'adu')" id="tabAladu">Al'adu</button>
+      <button class="tab-btn active" onclick="filterNews('All')" id="tabAll">Tous</button>
+      <button class="tab-btn" onclick="filterNews('Labarai')" id="tabLabarai">Actualités</button>
+      <button class="tab-btn" onclick="filterNews('Wasanni')" id="tabWasanni">Sport</button>
+      <button class="tab-btn" onclick="filterNews('Sanarwa')" id="tabSanarwa">Annonces</button>
+      <button class="tab-btn" onclick="filterNews('Al\'adu')" id="tabAladu">Culture</button>
     </div>
 
     <div class="cards" id="newsContainer"></div>
@@ -161,14 +161,14 @@
   <!-- Contact Section -->
   <section class="section contact-section" id="contact">
     <div class="section-title" style="justify-content: center;">
-      <h2 id="contactTitle" style="text-align: center;">📞 Tuntuɓe <span>Mu</span></h2>
+      <h2 id="contactTitle" style="text-align: center;">📞 Contactez-<span>nous</span></h2>
     </div>
     <div class="contact-box">
       <form class="contact-form" onsubmit="sendContactForm(event)">
-        <input type="text" id="cName" placeholder="Sunanka" required>
+        <input type="text" id="cName" placeholder="Votre Nom" required>
         <input type="email" id="cEmail" placeholder="Email" required>
-        <textarea id="cMessage" placeholder="Rubuta saƙonka ko ra'ayinka a nan..." rows="4" required></textarea>
-        <button type="submit" id="cSendBtn" class="btn-whatsapp">💬 Aika saƙo ta WhatsApp</button>
+        <textarea id="cMessage" placeholder="Écrivez votre message ou avis ici..." rows="4" required></textarea>
+        <button type="submit" id="cSendBtn" class="btn-whatsapp">💬 Envoyer via WhatsApp</button>
       </form>
     </div>
   </section>
@@ -186,7 +186,7 @@
   </div>
 
   <footer>
-    <div id="footerText">© 2026 Student Association TV. Duk haƙƙoƙi an kiyaye su. | @studentassociationtv</div>
+    <div id="footerText">© 2026 Student Association TV. Tous droits réservés. | @studentassociationtv</div>
   </footer>
 
   <script>
@@ -195,6 +195,21 @@
     let currentFilter = 'All';
 
     const i18n = {
+      fr: {
+        top: "🎓 Student Association TV — La Voix des Élèves",
+        navHome: "Accueil", navLive: "Direct & TV", navNews: "Actualités", navContact: "Contact",
+        heroT: "La Voix des <span>Élèves</span><br>Partout, À Tout Moment",
+        heroD: "Bienvenue sur Student Association TV — votre plateforme en ligne d'actualités, d'éducation, de divertissement, de sport et d'interviews.",
+        liveSec: "📺 Chaîne <span>YouTube & Live TV</span>",
+        playlistT: "📌 Dernières Émissions",
+        ytBtn: "Visiter la chaîne YouTube ↗",
+        newsSec: "📰 Actualités & <span>Rubriques</span>",
+        tabAll: "Tous", tabLab: "Actualités", tabWas: "Sport", tabSan: "Annonces", tabAla: "Culture",
+        contactT: "📞 Contactez-<span>nous</span>",
+        cName: "Votre Nom", cMsg: "Écrivez votre message ici...", cBtn: "💬 Envoyer via WhatsApp",
+        footer: "© 2026 Student Association TV. Tous droits réservés. | @studentassociationtv",
+        noNews: "Aucune actualité dans cette catégorie pour le moment."
+      },
       ha: {
         top: "🎓 Student Association TV — Muryar Dalibai",
         navHome: "Home", navLive: "Live & TV", navNews: "Labarai", navContact: "Tuntuɓe Mu",
@@ -209,21 +224,6 @@
         cName: "Sunanka", cMsg: "Rubuta saƙonka ko ra'ayinka a nan...", cBtn: "💬 Aika saƙo ta WhatsApp",
         footer: "© 2026 Student Association TV. Duk haƙƙoƙi an kiyaye su. | @studentassociationtv",
         noNews: "Babu labari a wannan rukunin a yanzu."
-      },
-      fr: {
-        top: "🎓 Student Association TV — La Voix des Étudiants",
-        navHome: "Accueil", navLive: "Direct & TV", navNews: "Actualités", navContact: "Contact",
-        heroT: "La Voix des <span>Étudiants</span><br>Partout, À Tout Moment",
-        heroD: "Bienvenue sur Student Association TV — votre plateforme en ligne d'actualités, d'éducation, de divertissement, de sport et d'interviews.",
-        liveSec: "📺 Chaîne <span>YouTube & Live TV</span>",
-        playlistT: "📌 Dernières Émissions",
-        ytBtn: "Visiter la chaîne YouTube ↗",
-        newsSec: "📰 Actualités & <span>Rubriques</span>",
-        tabAll: "Tous", tabLab: "Actualités", tabWas: "Sport", tabSan: "Annonces", tabAla: "Culture",
-        contactT: "📞 Contactez-<span>nous</span>",
-        cName: "Votre Nom", cMsg: "Écrivez votre message ici...", cBtn: "💬 Envoyer via WhatsApp",
-        footer: "© 2026 Student Association TV. Tous droits réservés. | @studentassociationtv",
-        noNews: "Aucune actualité dans cette catégorie pour le moment."
       },
       zarm: {
         top: "🎓 Student Association TV — Kajiney Minde",
@@ -243,7 +243,7 @@
     };
 
     function changeLanguage(lang) {
-      const t = i18n[lang] || i18n.ha;
+      const t = i18n[lang] || i18n.fr;
       document.getElementById('topSubtitle').innerText = t.top;
       document.getElementById('navHome').innerText = t.navHome;
       document.getElementById('navLive').innerText = t.navLive;
@@ -291,7 +291,7 @@
         : allNews.filter(item => item.category && item.category.toLowerCase() === currentFilter.toLowerCase());
 
       const lang = document.getElementById('langSelect').value;
-      const t = i18n[lang] || i18n.ha;
+      const t = i18n[lang] || i18n.fr;
 
       if (filtered.length > 0) {
         container.innerHTML = '';
@@ -302,7 +302,7 @@
             <article class="card" onclick="openModal(${originalIndex})">
               <div class="card-img">${imgHTML}</div>
               <div class="card-body">
-                <span class="category-badge">${item.category || 'Labarai'}</span>
+                <span class="category-badge">${item.category || 'Actualités'}</span>
                 <h3>${item.title}</h3>
                 <p>${item.content}</p>
               </div>
@@ -317,7 +317,7 @@
       const item = allNews[index];
       if (!item) return;
       document.getElementById('modalTitle').innerText = item.title;
-      document.getElementById('modalCategory').innerText = item.category || 'Labarai';
+      document.getElementById('modalCategory').innerText = item.category || 'Actualités';
       document.getElementById('modalDate').innerText = item.date_published || '';
       document.getElementById('modalContent').innerText = item.content;
 
@@ -340,11 +340,14 @@
       const email = document.getElementById('cEmail').value;
       const message = document.getElementById('cMessage').value;
 
-      const waUrl = `https://wa.me/${whatsappNumber}?text=*SABON SAKO DAGA DVT*%0A👤 *Suna:* ${encodeURIComponent(name)}%0A📧 *Email:* ${encodeURIComponent(email)}%0A💬 *Sako:* ${encodeURIComponent(message)}`;
+      const waUrl = `https://wa.me/${whatsappNumber}?text=*NOUVEAU MESSAGE DVT*%0A👤 *Nom:* ${encodeURIComponent(name)}%0A📧 *Email:* ${encodeURIComponent(email)}%0A💬 *Message:* ${encodeURIComponent(message)}`;
       window.open(waUrl, "_blank");
     }
 
-    document.addEventListener("DOMContentLoaded", fetchNews);
+    document.addEventListener("DOMContentLoaded", () => {
+      fetchNews();
+      changeLanguage('fr');
+    });
   </script>
 </body>
 </html>

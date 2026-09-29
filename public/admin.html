@@ -1,22 +1,20 @@
 <!DOCTYPE html>
-<html lang="ha">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DVT - Babban Edita (Admin Dashboard)</title>
+    <title>DVT - Tableau de Bord Admin</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background: #0b0f19; color: #f8fafc; padding: 20px; line-height: 1.5; }
         
         .container { max-width: 850px; margin: 30px auto; }
         
-        /* Card & Box Styles */
         .card { background: #1e293b; border-radius: 14px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid #334155; overflow: hidden; margin-bottom: 30px; }
         .card-header { background: #0f172a; padding: 20px 25px; border-bottom: 1px solid #334155; display: flex; justify-content: space-between; align-items: center; }
         .card-header h2, .card-header h3 { color: #38bdf8; font-size: 20px; display: flex; align-items: center; gap: 10px; }
         .card-body { padding: 25px; }
 
-        /* Forms */
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         .form-group { margin-bottom: 20px; }
         .form-group.full { grid-column: span 2; }
@@ -28,13 +26,11 @@
         input:focus, select:focus, textarea:focus { outline: none; border-color: #38bdf8; box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15); }
         textarea { height: 130px; resize: vertical; }
 
-        /* File Upload Custom Box */
         .file-upload-box { border: 2px dashed #475569; padding: 20px; text-align: center; border-radius: 8px; background: #0f172a; cursor: pointer; transition: 0.3s; }
         .file-upload-box:hover { border-color: #38bdf8; }
         .file-upload-box input { display: none; }
         .preview-img { margin-top: 15px; max-width: 100%; max-height: 200px; object-fit: cover; border-radius: 6px; display: none; border: 1px solid #475569; }
 
-        /* Buttons */
         .btn { background: #0284c7; color: white; padding: 12px 20px; border: none; border-radius: 8px; cursor: pointer; width: 100%; font-size: 16px; font-weight: bold; transition: background 0.3s, transform 0.1s; display: flex; justify-content: center; align-items: center; gap: 8px; }
         .btn:hover { background: #0369a1; }
         .btn:active { transform: scale(0.98); }
@@ -42,11 +38,9 @@
         .btn-danger:hover { background: #b91c1c; }
         .btn-sm { padding: 6px 12px; font-size: 13px; width: auto; border-radius: 6px; }
 
-        /* Login Screen */
         #login-section { max-width: 420px; margin: 80px auto; }
         #admin-section { display: none; }
 
-        /* News Management List */
         .news-list { margin-top: 10px; }
         .news-item { background: #0f172a; padding: 15px 20px; border-radius: 10px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #334155; transition: 0.2s; }
         .news-item:hover { border-color: #64748b; }
@@ -55,7 +49,6 @@
         
         .badge-cat { background: #0284c7; color: white; padding: 2px 8px; border-radius: 4px; font-size: 11px; margin-right: 5px; }
 
-        /* Top Header in Admin */
         .admin-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; background: #1e293b; padding: 15px 25px; border-radius: 12px; border: 1px solid #334155; }
         .admin-top h1 { font-size: 22px; color: #f8fafc; }
     </style>
@@ -66,19 +59,19 @@
     <!-- Login Section -->
     <div id="login-section" class="card">
         <div class="card-header" style="justify-content: center;">
-            <h2>🔐 Shiga Admin Panel</h2>
+            <h2>🔐 Connexion Admin</h2>
         </div>
         <div class="card-body">
             <form id="login-form">
                 <div class="form-group">
-                    <label>Sunan Mai Amfani (Username)</label>
-                    <input type="text" id="username" required placeholder="Shigar da username...">
+                    <label>Nom d'utilisateur (Username)</label>
+                    <input type="text" id="username" required placeholder="Entrer le nom d'utilisateur...">
                 </div>
                 <div class="form-group">
-                    <label>Kalmar Sirri (Password)</label>
-                    <input type="password" id="password" required placeholder="Shigar da password...">
+                    <label>Mot de passe (Password)</label>
+                    <input type="password" id="password" required placeholder="Entrer le mot de passe...">
                 </div>
-                <button type="submit" class="btn">Shiga Ciki</button>
+                <button type="submit" class="btn">Se connecter</button>
             </form>
         </div>
     </div>
@@ -86,45 +79,45 @@
     <!-- Admin Panel Dashboard -->
     <div id="admin-section">
         <div class="admin-top">
-            <h1>Panel din Gudanarwa — DVT</h1>
-            <button class="btn btn-danger btn-sm" onclick="logout()">Fita (Logout)</button>
+            <h1>Panneau d'Administration — DVT</h1>
+            <button class="btn btn-danger btn-sm" onclick="logout()">Déconnexion</button>
         </div>
 
         <!-- Add News Card -->
         <div class="card">
             <div class="card-header">
-                <h3>📝 Wallafa Sabon Labari</h3>
+                <h3>📝 Publier une Actualité</h3>
             </div>
             <div class="card-body">
                 <form id="news-form">
                     <div class="form-grid">
                         <div class="form-group">
-                            <label>Taken Labari (Title)</label>
-                            <input type="text" id="title" required placeholder="Misali: Taron Dalibai na Yau">
+                            <label>Titre de l'Actualité</label>
+                            <input type="text" id="title" required placeholder="Ex: Réunion des élèves aujourd'hui">
                         </div>
                         <div class="form-group">
-                            <label>Rukuni (Category)</label>
+                            <label>Rubrique (Category)</label>
                             <select id="category">
-                                <option value="Labarai">Labarai</option>
-                                <option value="Wasanni">Wasanni</option>
-                                <option value="Sanarwa">Sanarwa</option>
-                                <option value="Al'adu">Al'adu</option>
+                                <option value="Labarai">Actualités</option>
+                                <option value="Wasanni">Sport</option>
+                                <option value="Sanarwa">Annonces</option>
+                                <option value="Al'adu">Culture</option>
                             </select>
                         </div>
                         <div class="form-group full">
-                            <label>Hoton Labari</label>
+                            <label>Image de l'Actualité</label>
                             <div class="file-upload-box" onclick="document.getElementById('image').click()">
-                                <span style="color: #94a3b8; font-size: 14px;">📁 Danna anan domin zaɓar hoto daga wayarka</span>
+                                <span style="color: #94a3b8; font-size: 14px;">📁 Cliquez ici pour choisir une image depuis votre appareil</span>
                                 <input type="file" id="image" accept="image/*" onchange="previewImage(event)">
-                                <img id="img-preview" class="preview-img" alt="Preview">
+                                <img id="img-preview" class="preview-img" alt="Aperçu">
                             </div>
                         </div>
                         <div class="form-group full">
-                            <label>Cikakken Bayanin Labari (Content)</label>
-                            <textarea id="content" required placeholder="Rubuta cikakken bayanin labarin a nan..."></textarea>
+                            <label>Contenu de l'Actualité</label>
+                            <textarea id="content" required placeholder="Rédigez les détails de l'actualité ici..."></textarea>
                         </div>
                     </div>
-                    <button type="submit" class="btn">🚀 Wallafa Labari Yanzu</button>
+                    <button type="submit" class="btn">🚀 Publier maintenant</button>
                 </form>
             </div>
         </div>
@@ -132,11 +125,11 @@
         <!-- Manage News List Card -->
         <div class="card">
             <div class="card-header">
-                <h3>📊 Jerin Labaran da Aka Wallafa</h3>
+                <h3>📊 Liste des Actualités Publiées</h3>
             </div>
             <div class="card-body">
                 <div class="news-list" id="admin-news-container">
-                    <p style="text-align: center; color: #94a3b8;">Ana lodi labarai...</p>
+                    <p style="text-align: center; color: #94a3b8;">Chargement des actualités...</p>
                 </div>
             </div>
         </div>
@@ -169,10 +162,10 @@
                 document.getElementById('admin-section').style.display = 'block';
                 loadAdminNews();
             } else {
-                alert(data.message || 'Kuskure a Username ko Password!');
+                alert(data.message || 'Nom d’utilisateur ou mot de passe incorrect !');
             }
         } catch (err) {
-            alert('Matsalar sadarwa da server!');
+            alert('Erreur de connexion au serveur !');
         }
     });
 
@@ -215,13 +208,13 @@
             });
             const data = await res.json();
             if (data.success) {
-                alert('An wallafa labarin da nasara!');
+                alert('Actualité publiée avec succès !');
                 location.reload();
             } else {
-                alert('Kuskure: ' + data.message);
+                alert('Erreur : ' + data.message);
             }
         } catch (err) {
-            alert('An samu matsala wajen tura labarin.');
+            alert('Erreur lors de l’envoi de l’actualité.');
         }
     }
 
@@ -239,33 +232,33 @@
                     div.innerHTML = `
                         <div class="news-info">
                             <h4>${item.title}</h4>
-                            <p><span class="badge-cat">${item.category || 'Labarai'}</span> KWANATA: ${item.date_published || 'N/A'}</p>
+                            <p><span class="badge-cat">${item.category || 'Actualités'}</span> DATE : ${item.date_published || 'N/A'}</p>
                         </div>
-                        <button class="btn btn-danger btn-sm" onclick="deleteNews(${item.id})">Share</button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteNews(${item.id})">Supprimer</button>
                     `;
                     container.appendChild(div);
                 });
             } else {
-                container.innerHTML = '<p style="text-align: center; color: #94a3b8;">Babu wani labari da aka wallafa tukuna.</p>';
+                container.innerHTML = '<p style="text-align: center; color: #94a3b8;">Aucune actualité publiée pour le moment.</p>';
             }
         } catch (err) {
-            console.error('Kuskure wajen loda labarai:', err);
+            console.error('Erreur lors du chargement des actualités :', err);
         }
     }
 
     async function deleteNews(id) {
-        if (confirm('Ka tabbata kana son share wannan labarin?')) {
+        if (confirm('Voulez-vous vraiment supprimer cette actualité ?')) {
             try {
                 const res = await fetch(`/api/news/${id}`, { method: 'DELETE' });
                 const data = await res.json();
                 if (data.success) {
-                    alert('An share labarin!');
+                    alert('Actualité supprimée !');
                     loadAdminNews();
                 } else {
-                    alert('Kuskure wajen share labari.');
+                    alert('Erreur lors de la suppression.');
                 }
             } catch (err) {
-                alert('Matsalar sadarwa da server.');
+                alert('Erreur de connexion au serveur.');
             }
         }
     }
