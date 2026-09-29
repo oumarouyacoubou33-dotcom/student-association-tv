@@ -34,9 +34,11 @@
     .section-title h2 span { color: var(--red); }
 
     /* Categories Tabs */
-    .filter-tabs { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 5px; margin-bottom: 25px; }
+    .filter-tabs { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 25px; border-bottom: 2px solid #222; position: relative; scrollbar-width: none; }
+    .filter-tabs::-webkit-scrollbar { display: none; }
     .tab-btn { background: #181818; color: #ccc; border: 1px solid #333; padding: 8px 16px; border-radius: 20px; font-size: 13px; cursor: pointer; white-space: nowrap; transition: .3s; }
-    .tab-btn.active, .tab-btn:hover { background: var(--red); color: white; border-color: var(--red); }
+    .tab-btn.active { background: var(--red); color: white; border-color: var(--red); font-weight: bold; }
+    .tab-btn:hover { background: #333; color: white; }
 
     .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
     .card { background: var(--dark2); border: 1px solid #292929; border-radius: 10px; overflow: hidden; cursor: pointer; transition: .3s; }
@@ -148,12 +150,12 @@
 
     <!-- Filter Tabs -->
     <div class="filter-tabs">
-      <button class="tab-btn active" onclick="filterNews('All')" id="tabAll">Tous</button>
-      <button class="tab-btn" onclick="filterNews('Actualites')" id="tabActualites">Actualités</button>
-      <button class="tab-btn" onclick="filterNews('Sport')" id="tabSport">Sport</button>
-      <button class="tab-btn" onclick="filterNews('Interviews')" id="tabInterviews">Interviews</button>
-      <button class="tab-btn" onclick="filterNews('Culture')" id="tabCulture">Culture</button>
-      <button class="tab-btn" onclick="filterNews('Divertissements')" id="tabDivertissements">Divertissements</button>
+      <button class="tab-btn active" onclick="filterNews('All', this)" id="tabAll">Tous</button>
+      <button class="tab-btn" onclick="filterNews('Actualites', this)" id="tabActualites">Actualités</button>
+      <button class="tab-btn" onclick="filterNews('Sport', this)" id="tabSport">Sport</button>
+      <button class="tab-btn" onclick="filterNews('Interviews', this)" id="tabInterviews">Interviews</button>
+      <button class="tab-btn" onclick="filterNews('Culture', this)" id="tabCulture">Culture</button>
+      <button class="tab-btn" onclick="filterNews('Divertissements', this)" id="tabDivertissements">Divertissements</button>
     </div>
 
     <div class="cards" id="newsContainer"></div>
@@ -281,8 +283,12 @@
       } catch (err) { console.error(err); }
     }
 
-    function filterNews(cat) {
+    function filterNews(cat, btnElement) {
       currentFilter = cat;
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      if(btnElement) {
+        btnElement.classList.add('active');
+      }
       renderNews();
     }
 
@@ -301,7 +307,7 @@
           const originalIndex = allNews.findIndex(n => n.id === item.id);
           let mediaHTML = '🎓';
           if (item.image) {
-            if (item.image.startsWith('data:video') || item.video === true || item.image.includes('video')) {
+            if (item.image.endsWith('.mp4') || item.image.endsWith('.webm') || item.image.includes('/uploads/') && (item.image.includes('mp4') || item.image.includes('video'))) {
               mediaHTML = `<video src="${item.image}" muted></video>`;
             } else {
               mediaHTML = `<img src="${item.image}" alt="media">`;
@@ -332,7 +338,7 @@
 
       const mediaContainer = document.getElementById('modalMediaContainer');
       if (item.image) {
-        if (item.image.startsWith('data:video') || item.image.includes('video/')) {
+        if (item.image.endsWith('.mp4') || item.image.endsWith('.webm') || item.image.includes('/uploads/')) {
           mediaContainer.innerHTML = `<video src="${item.image}" controls class="modal-video" autoplay></video>`;
         } else {
           mediaContainer.innerHTML = `<img src="${item.image}" class="modal-img">`;

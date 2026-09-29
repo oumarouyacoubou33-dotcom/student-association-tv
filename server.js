@@ -9,12 +9,10 @@ const PORT = process.env.PORT || 3000;
 const DATA_FILE = path.join(__dirname, 'news.json');
 const UPLOAD_DIR = path.join(__dirname, 'public', 'uploads');
 
-// Tabbatar foldan uploads yana nan
 if (!fs.existsSync(UPLOAD_DIR)) {
     fs.mkdirSync(UPLOAD_DIR, { recursive: true });
 }
 
-// Saita Multer don adana hotuna da bidiyoyi a cikin 'public/uploads'
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, UPLOAD_DIR);
@@ -24,20 +22,20 @@ const storage = multer.diskStorage({
         cb(null, uniqueSuffix + path.extname(file.originalname));
     }
 });
+
 const upload = multer({ 
     storage: storage,
-    limits: { fileSize: 50 * 1024 * 1024 } // Iyaka 50MB
+    limits: { fileSize: 100 * 1024 * 1024 } // Ƙara iyaka zuwa 100MB don bidiyo
 });
 
-app.use(bodyParser.json({ limit: '50mb' }));
-app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
+app.use(bodyParser.json({ limit: '100mb' }));
+app.use(bodyParser.urlencoded({ limit: '100mb', extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 if (!fs.existsSync(DATA_FILE)) {
     fs.writeFileSync(DATA_FILE, JSON.stringify([]));
 }
 
-// Karanta labarai
 app.get('/api/news', (req, res) => {
     try {
         const data = fs.readFileSync(DATA_FILE, 'utf8');
@@ -47,7 +45,6 @@ app.get('/api/news', (req, res) => {
     }
 });
 
-// Wallafa sabon labari tare da loda fayil (hoto ko bidiyo)
 app.post('/api/news', upload.single('mediaFile'), (req, res) => {
     try {
         const { title, category, content } = req.body;
@@ -59,7 +56,7 @@ app.post('/api/news', upload.single('mediaFile'), (req, res) => {
         if (req.file) {
             mediaUrl = '/uploads/' + req.file.filename;
         } else if (req.body.image) {
-            mediaUrl = req.body.image; // Idan an tura ta base64 ko link
+            mediaUrl = req.body.image;
         }
 
         const data = JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
@@ -81,7 +78,6 @@ app.post('/api/news', upload.single('mediaFile'), (req, res) => {
     }
 });
 
-// Goge labari
 app.delete('/api/news/:id', (req, res) => {
     try {
         const id = Number(req.params.id);
@@ -94,7 +90,6 @@ app.delete('/api/news/:id', (req, res) => {
     }
 });
 
-// Admin login
 app.post('/api/admin/login', (req, res) => {
     const { username, password } = req.body;
     if (username.trim() === 'admin' && password.trim() === 'admin') {
