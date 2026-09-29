@@ -23,9 +23,9 @@ const storage = multer.diskStorage({
     }
 });
 
-const upload = multer({ 
+const upload = multer({
     storage: storage,
-    limits: { fileSize: 100 * 1024 * 1024 } // Ƙara iyaka zuwa 100MB don bidiyo
+    limits: { fileSize: 100 * 1024 * 1024 } // 100MB
 });
 
 app.use(bodyParser.json({ limit: '100mb' }));
@@ -82,6 +82,16 @@ app.delete('/api/news/:id', (req, res) => {
     try {
         const id = Number(req.params.id);
         let data = JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
+        
+        // Cire fayil din dake server idan akwai shi don rage cunkoso
+        const itemToDelete = data.find(item => item.id === id);
+        if (itemToDelete && itemToDelete.image && itemToDelete.image.startsWith('/uploads/')) {
+            const filePath = path.join(__dirname, 'public', itemToDelete.image);
+            if (fs.existsSync(filePath)) {
+                fs.unlinkSync(filePath);
+            }
+        }
+
         data = data.filter(item => item.id !== id);
         fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
         res.json({ success: true, message: 'Supprimé avec succès !' });
