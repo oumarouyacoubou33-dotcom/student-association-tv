@@ -60,10 +60,10 @@ app.delete('/api/news/:id', (req, res) => {
     }
 });
 
-// Route admin login corrigée
+// An saita username da password su zama: admin / admin
 app.post('/api/admin/login', (req, res) => {
     const { username, password } = req.body;
-    if (username === 'admin' && password === 'dvt2026') {
+    if (username.trim() === 'admin' && password.trim() === 'admin') {
         res.json({ success: true });
     } else {
         res.json({ success: false, message: 'Nom d’utilisateur ou mot de passe incorrect !' });
