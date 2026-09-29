@@ -1,122 +1,83 @@
 const express = require('express');
-const path = require('path');
+const bodyParser = require('body-parser');
 const fs = require('fs');
-const multer = require('multer');
-const cors = require('cors');
-const { Pool } = require('pg');
+const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const DATA_FILE = path.join(__dirname, 'news.json');
 
-const ADMIN_USER = "Mrouyac";
-const ADMIN_PASSWORD = "976994mrou";
-
-app.use(cors());
-app.use(express.json({ limit: '50mb' }));
-app.use(express.urlencoded({ limit: '50mb', extended: true }));
-
-if (!fs.existsSync('./public')) fs.mkdirSync('./public');
-
-const pool = new Pool({
-    connectionString: 'postgresql://postgres.hoevhqthuombztskejkh:976994Roukki@aws-0-eu-north-1.pooler.supabase.com:6543/postgres',
-    ssl: {
-        rejectUnauthorized: false
-    }
-});
-
-pool.connect()
-    .then(client => {
-        console.log('An haɗa da Supabase PostgreSQL Database ta Pooler!');
-        return client.query(`
-            CREATE TABLE IF NOT EXISTS news (
-                id SERIAL PRIMARY KEY,
-                title TEXT NOT NULL,
-                category TEXT,
-                content TEXT NOT NULL,
-                image TEXT,
-                date_published TEXT
-            );
-
-            CREATE TABLE IF NOT EXISTS messages (
-                id SERIAL PRIMARY KEY,
-                name TEXT,
-                email TEXT,
-                message TEXT,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            );
-        `).then(() => client.release());
-    })
-    .catch(err => console.error('Matsalar haɗin Database:', err));
+// Saita iyakar girman fayil da za a iya turawa (A saita zuwa 50MB don ba da damar bidiyo da hotuna)
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-const upload = multer();
+// Duba ko news.json yana nan, idan babu a ƙirƙiro shi
+if (!fs.existsSync(DATA_FILE)) {
+    fs.writeFileSync(DATA_FILE, JSON.stringify([]));
+}
 
+// API don samun labarai da bidiyo
+app.get('/api/news', (req, res) => {
+    try {
+        const data = fs.readFileSync(DATA_FILE, 'utf8');
+        res.json({ success: true, data: JSON.parse(data) });
+    } catch (err) {
+        res.status(500).json({ success: false, message: 'Kuskure wajen karanta bayanai' });
+    }
+});
+
+// API don ƙara labari ko bidiyo
+app.post('/api/news', (req, res) => {
+    try {
+        const { title, category, content, image } = req.body;
+        if (!title || !content) {
+            return res.status(400).json({ success: false, message: 'Ana buƙatar babban batun da bayani!' });
+        }
+
+        const data = JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
+        const newItem = {
+            id: Date.now(),
+            title,
+            category: category || 'Actualités',
+            content,
+            image: image || '',
+            date_published: new Date().toLocaleDateString()
+        };
+
+        data.unshift(newItem); // Saka sabon abu a sama
+        fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
+        res.json({ success: true, message: 'An loda shi cikin nasara!' });
+    } catch (err) {
+        res.status(500).json({ success: false, message: 'Kuskure wajen adana fayil din' });
+    }
+});
+
+// API don goge labari ko bidiyo
+app.delete('/api/news/:id', (req, res) => {
+    try {
+        const id = Number(req.params.id);
+        let data = JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
+        data = data.filter(item => item.id !== id);
+        fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
+        res.json({ success: true, message: 'An goge shi cikin nasara!' });
+    } catch (err) {
+        res.status(500).json({ success: false, message: 'Kuskure wajen gogewa' });
+    }
+});
+
+// API na Admin Login
 app.post('/api/admin/login', (req, res) => {
     const { username, password } = req.body;
-    if (username === ADMIN_USER && password === ADMIN_PASSWORD) {
-        res.json({ success: true, token: "dvt_admin_authenticated" });
+    // Za ka iya sauya sunan shiga da kalmar sirri anan idan ka ga dama
+    if (username === 'admin' && password === 'dvt2026') {
+        res.json({ success: true });
     } else {
-        res.status(401).json({ success: false, message: "Kuskure a Username ko Password!" });
+        res.json({ success: false, message: 'Sunan mai amfani ko kalmar sirri ba daidai ba ne!' });
     }
 });
 
-app.get('/api/news', async (req, res) => {
-    try {
-        const result = await pool.query('SELECT * FROM news ORDER BY id DESC');
-        res.json({ success: true, data: result.rows });
-    } catch (err) {
-        console.error("Kuskure wajen ciro labarai:", err);
-        res.status(500).json({ success: false, message: err.message });
-    }
-});
-
-// Mun yi amfani da upload.any() domin karɓar komai ko ta wace kala ce admin.html ke tura shi
-app.post('/api/news', upload.any(), async (req, res) => {
-    try {
-        const title = req.body.title;
-        const category = req.body.category;
-        const content = req.body.content;
-        let image = req.body.image || null;
-
-        // Idan an tura hoton ta multer (file)
-        if (req.files && req.files.length > 0) {
-            const file = req.files.find(f => f.fieldname === 'image') || req.files[0];
-            if (file) {
-                image = `data:${file.mimetype};base64,${file.buffer.toString('base64')}`;
-            }
-        }
-
-        const date_published = new Date().toLocaleDateString('ha-NG', { year: 'numeric', month: 'short', day: 'numeric' });
-
-        if (!title || !content) {
-            return res.status(400).json({ success: false, message: 'Shigar da title da content!' });
-        }
-
-        const sql = `INSERT INTO news (title, category, content, image, date_published) VALUES ($1, $2, $3, $4, $5)`;
-        await pool.query(sql, [title, category || 'General', content, image, date_published]);
-        res.json({ success: true, message: 'An adana labarin da hotonsa!' });
-    } catch (err) {
-        console.error("Kuskure wajen wallafa labari:", err);
-        res.status(500).json({ success: false, message: err.message });
-    }
-});
-
-app.delete('/api/news/:id', async (req, res) => {
-    const id = req.params.id;
-    try {
-        await pool.query('DELETE FROM news WHERE id = $1', [id]);
-        res.json({ success: true, message: 'An share labarin!' });
-    } catch (err) {
-        console.error("Kuskure wajen share labari:", err);
-        res.status(500).json({ success: false, message: err.message });
-    }
-});
-
-app.get('/admin', (req, res) => res.sendFile(path.join(__dirname, 'public', 'admin.html')));
-app.get('/admin.html', (req, res) => res.sendFile(path.join(__dirname, 'public', 'admin.html')));
-app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));
-
-app.listen(PORT, '0.0.0.0', () => {
-    console.log(`🚀 Server tana aiki a PORT: ${PORT}`);
+app.listen(PORT, () => {
+    console.log(`Server yana aiki a tashar: http://localhost:${PORT}`);
 });

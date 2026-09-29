@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dalibai Vision TV | DVT</title>
+  <title>Student Association TV | DVT</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
     :root { --red: #e50914; --red-dark: #b80710; --dark: #090909; --dark2: #151515; --white: #fff; --muted: #999; }
@@ -149,10 +149,11 @@
     <!-- Filter Tabs -->
     <div class="filter-tabs">
       <button class="tab-btn active" onclick="filterNews('All')" id="tabAll">Tous</button>
-      <button class="tab-btn" onclick="filterNews('Labarai')" id="tabLabarai">Actualités</button>
-      <button class="tab-btn" onclick="filterNews('Wasanni')" id="tabWasanni">Sport</button>
-      <button class="tab-btn" onclick="filterNews('Sanarwa')" id="tabSanarwa">Annonces</button>
-      <button class="tab-btn" onclick="filterNews('Al\'adu')" id="tabAladu">Culture</button>
+      <button class="tab-btn" onclick="filterNews('Actualites')" id="tabActualites">Actualités</button>
+      <button class="tab-btn" onclick="filterNews('Sport')" id="tabSport">Sport</button>
+      <button class="tab-btn" onclick="filterNews('Interviews')" id="tabInterviews">Interviews</button>
+      <button class="tab-btn" onclick="filterNews('Culture')" id="tabCulture">Culture</button>
+      <button class="tab-btn" onclick="filterNews('Divertissements')" id="tabDivertissements">Divertissements</button>
     </div>
 
     <div class="cards" id="newsContainer"></div>
@@ -204,11 +205,11 @@
         playlistT: "📌 Dernières Émissions",
         ytBtn: "Visiter la chaîne YouTube ↗",
         newsSec: "📰 Actualités & <span>Rubriques</span>",
-        tabAll: "Tous", tabLab: "Actualités", tabWas: "Sport", tabSan: "Annonces", tabAla: "Culture",
+        tabAll: "Tous", tabAct: "Actualités", tabSpo: "Sport", tabInt: "Interviews", tabCul: "Culture", tabDiv: "Divertissements",
         contactT: "📞 Contactez-<span>nous</span>",
         cName: "Votre Nom", cMsg: "Écrivez votre message ici...", cBtn: "💬 Envoyer via WhatsApp",
         footer: "© 2026 Student Association TV. Tous droits réservés. | @studentassociationtv",
-        noNews: "Aucune actualité dans cette catégorie pour le moment."
+        noNews: "Aucune publication dans cette catégorie pour le moment."
       },
       ha: {
         top: "🎓 Student Association TV — Muryar Dalibai",
@@ -218,12 +219,12 @@
         liveSec: "📺 Tashar <span>YouTube & Live TV</span>",
         playlistT: "📌 Shirye-shiryen Kwanan Nan",
         ytBtn: "Ziyarci YouTube Channel ↗",
-        newsSec: "📰 Rukunin <span>Labarai da Shirye-shirye</span>",
-        tabAll: "Duk", tabLab: "Labarai", tabWas: "Wasanni", tabSan: "Sanarwa", tabAla: "Al'adu",
+        newsSec: "📰 Rukunin <span>Shirye-shirye da Labarai</span>",
+        tabAll: "Duk", tabAct: "Labarai", tabSpo: "Wasanni", tabInt: "Hirarraki", tabCul: "Al'adu", tabDiv: "Nishaɗi",
         contactT: "📞 Tuntuɓe <span>Mu</span>",
         cName: "Sunanka", cMsg: "Rubuta saƙonka ko ra'ayinka a nan...", cBtn: "💬 Aika saƙo ta WhatsApp",
         footer: "© 2026 Student Association TV. Duk haƙƙoƙi an kiyaye su. | @studentassociationtv",
-        noNews: "Babu labari a wannan rukunin a yanzu."
+        noNews: "Babu abun da ke cikin wannan rukunin a yanzu."
       },
       zarm: {
         top: "🎓 Student Association TV — Kajiney Minde",
@@ -234,11 +235,11 @@
         playlistT: "📌 Waati Gando Fasaley",
         ytBtn: "Kadda YouTube Channel ↗",
         newsSec: "📰 Alhabarwey da <span>Fasaley</span>",
-        tabAll: "Kulu", tabLab: "Alhabarwey", tabWas: "Wasa", tabSan: "Tuhari", tabAla: "Aladu",
+        tabAll: "Kulu", tabAct: "Alhabarwey", tabSpo: "Wasa", tabInt: "Interviews", tabCul: "Aladu", tabDiv: "Divertissements",
         contactT: "📞 Sahan <span>Murna</span>",
         cName: "Ni maa", cMsg: "Hantum ni sanbao wala miila...", cBtn: "💬 Sanba saaku WhatsApp ra",
         footer: "© 2026 Student Association TV. Alhakki kul gundo gaa. | @studentassociationtv",
-        noNews: "Alhabar kul sinda fasalu wo ra sohoka."
+        noNews: "Fasal kul sinda wo ra sohoka."
       }
     };
 
@@ -256,10 +257,11 @@
       document.getElementById('ytBtn').innerText = t.ytBtn;
       document.getElementById('newsSectionTitle').innerHTML = t.newsSec;
       document.getElementById('tabAll').innerText = t.tabAll;
-      document.getElementById('tabLabarai').innerText = t.tabLab;
-      document.getElementById('tabWasanni').innerText = t.tabWas;
-      document.getElementById('tabSanarwa').innerText = t.tabSan;
-      document.getElementById('tabAladu').innerText = t.tabAla;
+      document.getElementById('tabActualites').innerText = t.tabAct;
+      document.getElementById('tabSport').innerText = t.tabSpo;
+      document.getElementById('tabInterviews').innerText = t.tabInt;
+      document.getElementById('tabCulture').innerText = t.tabCul;
+      document.getElementById('tabDivertissements').innerText = t.tabDiv;
       document.getElementById('contactTitle').innerHTML = t.contactT;
       document.getElementById('cName').placeholder = t.cName;
       document.getElementById('cMessage').placeholder = t.cMsg;
