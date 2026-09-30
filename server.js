@@ -32,12 +32,16 @@ app.use(bodyParser.json({ limit: '100mb' }));
 app.use(bodyParser.urlencoded({ limit: '100mb', extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Tabbatar an ƙirƙiri news.json idan babu ita
 if (!fs.existsSync(DATA_FILE)) {
     fs.writeFileSync(DATA_FILE, JSON.stringify([]));
 }
 
 app.get('/api/news', (req, res) => {
     try {
+        if (!fs.existsSync(DATA_FILE)) {
+            fs.writeFileSync(DATA_FILE, JSON.stringify([]));
+        }
         const data = fs.readFileSync(DATA_FILE, 'utf8');
         res.json({ success: true, data: JSON.parse(data) });
     } catch (err) {
@@ -59,7 +63,11 @@ app.post('/api/news', upload.single('mediaFile'), (req, res) => {
             mediaUrl = req.body.image;
         }
 
-        const data = JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
+        let data = [];
+        if (fs.existsSync(DATA_FILE)) {
+            data = JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
+        }
+
         const newItem = {
             id: Date.now(),
             title,
@@ -82,8 +90,7 @@ app.delete('/api/news/:id', (req, res) => {
     try {
         const id = Number(req.params.id);
         let data = JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
-        
-        // Cire fayil din dake server idan akwai shi don rage cunkoso
+
         const itemToDelete = data.find(item => item.id === id);
         if (itemToDelete && itemToDelete.image && itemToDelete.image.startsWith('/uploads/')) {
             const filePath = path.join(__dirname, 'public', itemToDelete.image);
