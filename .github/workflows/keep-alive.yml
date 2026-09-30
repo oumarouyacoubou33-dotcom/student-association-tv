@@ -1,0 +1,15 @@
+name: DVT Keep Alive
+
+on:
+  schedule:
+    # Zai riƙa aiki duk bayan minti 5
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Render URL
+        run: |
+          curl -I https://student-association-tv.onrender.com
