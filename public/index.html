@@ -292,6 +292,17 @@
       renderNews();
     }
 
+    // Tabbataccen aikin tantance bidiyo ko hoto
+    function isVideoFile(url) {
+      if (!url) return false;
+      const lower = url.toLowerCase();
+      // Idan hoto ne (jpg, png, webp, gif), dole ya dawo da false (wato ba bidiyo bane)
+      if (lower.endsWith('.jpg') || lower.endsWith('.jpeg') || lower.endsWith('.png') || lower.endsWith('.webp') || lower.endsWith('.gif')) {
+        return false;
+      }
+      return lower.endsWith('.mp4') || lower.endsWith('.webm') || lower.endsWith('.ogg') || lower.includes('video');
+    }
+
     function renderNews() {
       const container = document.getElementById('newsContainer');
       const filtered = currentFilter === 'All'
@@ -307,7 +318,7 @@
           const originalIndex = allNews.findIndex(n => n.id === item.id);
           let mediaHTML = '🎓';
           if (item.image) {
-            if (item.image.endsWith('.mp4') || item.image.endsWith('.webm') || item.image.includes('/uploads/') && (item.image.includes('mp4') || item.image.includes('video'))) {
+            if (isVideoFile(item.image)) {
               mediaHTML = `<video src="${item.image}" muted></video>`;
             } else {
               mediaHTML = `<img src="${item.image}" alt="media">`;
@@ -338,7 +349,7 @@
 
       const mediaContainer = document.getElementById('modalMediaContainer');
       if (item.image) {
-        if (item.image.endsWith('.mp4') || item.image.endsWith('.webm') || item.image.includes('/uploads/')) {
+        if (isVideoFile(item.image)) {
           mediaContainer.innerHTML = `<video src="${item.image}" controls class="modal-video" autoplay></video>`;
         } else {
           mediaContainer.innerHTML = `<img src="${item.image}" class="modal-img">`;
