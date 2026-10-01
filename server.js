@@ -3,24 +3,27 @@ const bodyParser = require('body-parser');
 const fs = require('fs');
 const path = require('path');
 const multer = require('multer');
+const { v2: cloudinary } = require('cloudinary');
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 const DATA_FILE = path.join(__dirname, 'news.json');
-const UPLOAD_DIR = path.join(__dirname, 'public', 'uploads');
 
-if (!fs.existsSync(UPLOAD_DIR)) {
-    fs.mkdirSync(UPLOAD_DIR, { recursive: true });
-}
+// Saita bayanan Cloudinary
+cloudinary.config({
+  cloud_name: 'fbtfccom',
+  api_key: '759698651832687',
+  api_secret: 'x85MDo8JWIfH1DJBahXFxa3OH1Q'
+});
 
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, UPLOAD_DIR);
+// Tsara yadda multer zai riƙa aike da hotuna kai tsaye zuwa Cloudinary
+const storage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: {
+        folder: 'dvt_uploads',
+        allowed_formats: ['jpg', 'png', 'jpeg', 'webp', 'mp4', 'mov', 'mkv'],
     },
-    filename: (req, file, cb) => {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        cb(null, uniqueSuffix + path.extname(file.originalname));
-    }
 });
 
 const upload = multer({
@@ -58,7 +61,8 @@ app.post('/api/news', upload.single('mediaFile'), (req, res) => {
 
         let mediaUrl = '';
         if (req.file) {
-            mediaUrl = '/uploads/' + req.file.filename;
+            // Anan req.file.path shi ne cikakken link ɗin Cloudinary na hoton/bidiyon da aka loda
+            mediaUrl = req.file.path;
         } else if (req.body.image) {
             mediaUrl = req.body.image;
         }
@@ -91,14 +95,7 @@ app.delete('/api/news/:id', (req, res) => {
         const id = Number(req.params.id);
         let data = JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
 
-        const itemToDelete = data.find(item => item.id === id);
-        if (itemToDelete && itemToDelete.image && itemToDelete.image.startsWith('/uploads/')) {
-            const filePath = path.join(__dirname, 'public', itemToDelete.image);
-            if (fs.existsSync(filePath)) {
-                fs.unlinkSync(filePath);
-            }
-        }
-
+        // Tunda hotunan suna kan Cloudinary, ba sai mun goge su a gida ba (local storage)
         data = data.filter(item => item.id !== id);
         fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
         res.json({ success: true, message: 'Supprimé avec succès !' });
