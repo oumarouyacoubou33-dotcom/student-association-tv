@@ -23,6 +23,7 @@ const storage = new CloudinaryStorage({
     params: {
         folder: 'dvt_uploads',
         allowed_formats: ['jpg', 'png', 'jpeg', 'webp', 'mp4', 'mov', 'mkv'],
+        resource_type: 'auto', // Wannan yana taimakawa wajen karɓar hotuna da bidiyo daidai
     },
 });
 
@@ -34,6 +35,13 @@ const upload = multer({
 app.use(bodyParser.json({ limit: '100mb' }));
 app.use(bodyParser.urlencoded({ limit: '100mb', extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Ƙara Timeout don hana katsewar bidiyoyi masu girma lokacin loda su
+app.use((req, res, next) => {
+    req.setTimeout(300000); // Minti 5
+    res.setTimeout(300000);
+    next();
+});
 
 // Tabbatar an ƙirƙiri news.json idan babu ita
 if (!fs.existsSync(DATA_FILE)) {
@@ -61,7 +69,6 @@ app.post('/api/news', upload.single('mediaFile'), (req, res) => {
 
         let mediaUrl = '';
         if (req.file) {
-            // Anan req.file.path shi ne cikakken link ɗin Cloudinary na hoton/bidiyon da aka loda
             mediaUrl = req.file.path;
         } else if (req.body.image) {
             mediaUrl = req.body.image;
@@ -95,7 +102,6 @@ app.delete('/api/news/:id', (req, res) => {
         const id = Number(req.params.id);
         let data = JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
 
-        // Tunda hotunan suna kan Cloudinary, ba sai mun goge su a gida ba (local storage)
         data = data.filter(item => item.id !== id);
         fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
         res.json({ success: true, message: 'Supprimé avec succès !' });
